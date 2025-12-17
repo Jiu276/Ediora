@@ -1,0 +1,136 @@
+{
+  "articles": [
+    {
+      "id": "2",
+      "title": "如何开始写作",
+      "slug": "how-to-start-writing",
+      "content": "<p>写作是一门艺术，也是一门技能。</p><p>通过 Ediora，你可以更好地组织和管理你的创作内容。</p>",
+      "excerpt": "写作是一门艺术，也是一门技能。",
+      "status": "published",
+      "typeId": "1",
+      "domainIds": [
+        "2"
+      ],
+      "author": "Admin",
+      "createdAt": "2025-12-03T02:13:14.819Z",
+      "updatedAt": "2025-12-03T02:13:14.819Z",
+      "publishDate": "2025-12-03T02:13:14.819Z",
+      "featuredImage": null,
+      "tags": [
+        "写作",
+        "技巧"
+      ],
+      "enableKeywordLinks": false
+    },
+    {
+      "id": "1",
+      "title": "欢迎使用 Ediora",
+      "slug": "welcome-to-ediora",
+      "content": "<p>这是你的第一篇文章。Ediora 是一个强大的博客文章发布管理系统。</p><p>你可以在这里创建、编辑和管理你的内容。</p>",
+      "excerpt": "这是你的第一篇文章。Ediora 是一个强大的博客文章发布管理系统。",
+      "status": "published",
+      "typeId": "1",
+      "domainIds": [
+        "1"
+      ],
+      "author": "Admin",
+      "createdAt": "2025-12-03T02:13:14.818Z",
+      "updatedAt": "2025-12-03T02:13:14.819Z",
+      "publishDate": "2025-12-03T02:13:14.819Z",
+      "featuredImage": null,
+      "tags": [
+        "介绍",
+        "开始"
+      ],
+      "enableKeywordLinks": false
+    },
+    {
+      "id": "03f574f9-5038-48e3-a4aa-06a4a2d947ad",
+      "title": "探索生活的乐趣与意义",
+      "slug": "",
+      "content": "<h2>引言</h2><p>在通用领域，探索生活的乐趣与意义是我们日常生活中经常遇到的话题。本文将为您分享一些实用的经验和建议，帮助您更好地享受生活的美好。</p><h2>核心内容</h2><p>探索生活的乐趣与意义涉及生活的方方面面。无论是日常起居还是休闲娱乐，我们都可以从中发现许多有趣的内容和实用的技巧。</p><p>通过实践和体验，我们可以更好地理解探索生活的乐趣与意义的真正意义，让生活变得更加丰富多彩。</p><h2>实用建议</h2><p>在实践探索生活的乐趣与意义的过程中，有一些小贴士可以帮助您获得更好的体验。这些建议来自实际经验，值得您参考和尝试。</p><p>同时，我们也需要注意一些细节和注意事项，这样才能真正享受到探索生活的乐趣与意义带来的乐趣。</p><h2>总结</h2><p>总的来说，探索生活的乐趣与意义是生活中一个值得关注的话题。通过学习和实践，我们可以让生活变得更加美好和充实。</p>",
+      "excerpt": "",
+      "status": "published",
+      "typeId": "1",
+      "categoryId": "e91f40db-dde8-40ed-9132-9a0b3c9dd4c1",
+      "domainIds": [],
+      "customDomains": [],
+      "author": "Admin",
+      "createdAt": "2025-12-03T05:24:59.074Z",
+      "updatedAt": "2025-12-03T05:24:59.074Z",
+      "publishDate": "2025-12-03T00:00:00.000Z",
+      "featuredImage": "https://images.unsplash.com/photo-31bcnp8bj?w=800&h=600&fit=crop",
+      "tags": [],
+      "enableKeywordLinks": false,
+      "links": [],
+      "images": [
+        "https://images.unsplash.com/photo-31bcnp8bj?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-ouyo3pkkw?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-mpx6xrqn2?w=800&h=600&fit=crop"
+      ]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "1",
+      "name": "文章",
+      "slug": "post",
+      "description": "标准博客文章"
+    },
+    {
+      "id": "2",
+      "name": "页面",
+      "slug": "page",
+      "description": "静态页面"
+    }
+  ],
+  "themes": [
+    {
+      "id": "1",
+      "name": "默认主题",
+      "slug": "default",
+      "isActive": true
+    },
+    {
+      "id": "2",
+      "name": "深色主题",
+      "slug": "dark",
+      "isActive": false
+    },
+    {
+      "id": "3",
+      "name": "简约主题",
+      "slug": "minimal",
+      "isActive": false
+    }
+  ],
+  "domains": [
+    {
+      "id": "1",
+      "name": "技术博客",
+      "url": "tech.example.com",
+      "description": "技术相关文章"
+    },
+    {
+      "id": "2",
+      "name": "生活随笔",
+      "url": "life.example.com",
+      "description": "生活感悟文章"
+    },
+    {
+      "id": "3",
+      "name": "产品资讯",
+      "url": "product.example.com",
+      "description": "产品相关文章"
+    }
+  ],
+  "assets": [],
+  "categories": [
+    {
+      "id": "e91f40db-dde8-40ed-9132-9a0b3c9dd4c1",
+      "name": "生活",
+      "slug": "生活",
+      "description": ""
+    }
+  ]
+}

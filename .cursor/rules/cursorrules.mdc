@@ -1,0 +1,10 @@
+---
+- 我的开发框架是 Next.js
+- 我的数据库 ORM 是 Prisma
+- 我的数据库是 MySQL
+- UI 组件框架是 AntDesign
+- 采用prisma/schema.prisma 文件来管理数据库配置，不要采用 prisma.config.ts 作为了连接配置入口
+- 执行标准的 Prisma 迁移流程，不要直接执行数据库填充/变更/连接操作
+- 不要使用外键
+- 启用软删除s
+---

@@ -1,0 +1,446 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --theme-primary: #1890ff;
+  --theme-accent: #722ed1;
+  --theme-hero-start: #f9fbff;
+  --theme-hero-end: #ffffff;
+  --theme-page-bg: #f4f7ff;
+  --theme-card-bg: #ffffff;
+  --theme-card-alt-bg: #f7f9fc;
+  --theme-highlight-bg: #fffbe6;
+  --theme-highlight-alt-bg: #f6ffed;
+  --theme-text-color: #0f172a;
+  --theme-muted-text: #475569;
+  --theme-tag-bg: #1890ff;
+  --theme-tag-text: #ffffff;
+  --theme-gradient-start: #1890ff;
+  --theme-gradient-end: #722ed1;
+  --theme-border-color: #e5e7eb;
+}
+
+body {
+  color: var(--theme-text-color);
+  background: var(--theme-page-bg);
+  font-family: var(--font-geist-sans), var(--font-geist-mono), system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--theme-primary);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  /* 优化触摸目标大小 */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 优化字体大小 */
+  body {
+    font-size: 16px; /* 防止 iOS 自动缩放 */
+  }
+
+  /* 优化滚动性能 */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 优化图片显示 */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* 移动端横屏优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* 横屏时减少上下内边距 */
+  .ant-layout-content {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+/* 小屏幕设备优化 */
+@media (max-width: 480px) {
+  /* 进一步优化字体大小 */
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  /* 优化卡片间距 */
+  .ant-card {
+    margin-bottom: 16px;
+  }
+}
+
+/* 防止文本选择（移动端长按优化） */
+@media (max-width: 768px) {
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+}
+
+/* 优化输入框在移动端的显示 */
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* 防止 iOS 自动缩放 */
+  }
+}
+
+/* 文章内容移动端优化 */
+@media (max-width: 768px) {
+  .article-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .article-content img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .article-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .article-content pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 14px;
+  }
+
+  .article-content blockquote {
+    margin-left: 0;
+    padding-left: 16px;
+    border-left-width: 3px;
+  }
+}
+
+/* 优化移动端卡片显示 */
+@media (max-width: 768px) {
+  .ant-card {
+    border-radius: 8px;
+  }
+
+  .ant-card-body {
+    padding: 16px;
+  }
+}
+
+/* 优化移动端按钮组 */
+@media (max-width: 768px) {
+  .ant-space {
+    flex-wrap: wrap;
+  }
+
+  .ant-btn {
+    min-width: auto;
+    padding: 8px 16px;
+  }
+}
+
+/* 文章内容样式优化 */
+.article-content {
+  line-height: 1.8;
+  color: var(--theme-text-color);
+  font-size: 16px;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--theme-text-color);
+}
+
+.article-content h1 {
+  font-size: 32px;
+  border-bottom: 2px solid var(--theme-border-color);
+  padding-bottom: 12px;
+}
+
+.article-content h2 {
+  font-size: 28px;
+  border-bottom: 1px solid var(--theme-border-color);
+  padding-bottom: 8px;
+}
+
+.article-content h3 {
+  font-size: 24px;
+}
+
+.article-content h4 {
+  font-size: 20px;
+}
+
+.article-content p {
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+.article-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 24px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+.article-content a {
+  color: var(--theme-primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.article-content a:hover {
+  border-bottom-color: var(--theme-primary);
+}
+
+.article-content ul,
+.article-content ol {
+  margin: 16px 0;
+  padding-left: 32px;
+  line-height: 1.8;
+}
+
+.article-content li {
+  margin-bottom: 8px;
+}
+
+.article-content blockquote {
+  margin: 24px 0;
+  padding: 16px 24px;
+  border-left: 4px solid var(--theme-primary);
+  background: var(--theme-highlight-bg);
+  border-radius: 4px;
+  font-style: italic;
+  color: var(--theme-muted-text);
+}
+
+.article-content code {
+  background: var(--theme-card-alt-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: var(--font-geist-mono), monospace;
+  color: var(--theme-primary);
+}
+
+.article-content pre {
+  background: var(--theme-card-alt-bg);
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 24px 0;
+  border: 1px solid var(--theme-border-color);
+}
+
+.article-content pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--theme-text-color);
+  font-size: 14px;
+}
+
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.article-content table th,
+.article-content table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--theme-border-color);
+}
+
+.article-content table th {
+  background: var(--theme-card-alt-bg);
+  font-weight: 600;
+  color: var(--theme-text-color);
+}
+
+.article-content table tr:last-child td {
+  border-bottom: none;
+}
+
+.article-content hr {
+  border: none;
+  border-top: 2px solid var(--theme-border-color);
+  margin: 32px 0;
+}
+
+.article-content strong {
+  font-weight: 600;
+  color: var(--theme-text-color);
+}
+
+.article-content em {
+  font-style: italic;
+}
+
+/* 卡片悬停效果 */
+.ant-card-hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  transition: all 0.3s ease;
+}
+
+/* 图片懒加载动画 */
+img[data-src] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+img[data-src].loaded {
+  opacity: 1;
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 优化链接样式 */
+a {
+  transition: all 0.3s ease;
+}
+
+/* 按钮悬停效果增强 */
+.ant-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* 标签样式优化 */
+.ant-tag {
+  transition: all 0.3s ease;
+}
+
+.ant-tag:hover {
+  transform: scale(1.05);
+}
+
+/* 响应式图片容器 */
+.image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.image-container img {
+  transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+  transform: scale(1.05);
+}
+
+/* 加载动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* 骨架屏优化 */
+.ant-skeleton {
+  border-radius: 8px;
+}
+
+/* 搜索框优化 */
+.ant-input-search .ant-input {
+  border-radius: 20px;
+}
+
+.ant-input-search .ant-input-search-button {
+  border-radius: 0 20px 20px 0;
+}
+
+/* 移动端文章内容优化 */
+@media (max-width: 768px) {
+  .article-content {
+    font-size: 15px;
+  }
+
+  .article-content h1 {
+    font-size: 24px;
+  }
+
+  .article-content h2 {
+    font-size: 20px;
+  }
+
+  .article-content h3 {
+    font-size: 18px;
+  }
+
+  .article-content pre {
+    font-size: 13px;
+    padding: 16px;
+  }
+
+  .article-content table {
+    font-size: 14px;
+  }
+
+  .article-content table th,
+  .article-content table td {
+    padding: 8px 12px;
+  }
+}

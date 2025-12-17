@@ -1,0 +1,131 @@
+.articles-page {
+  max-width: 1400px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  color: #1f2937;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.articles-table {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f9fafb;
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+td a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-published {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-draft {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+.empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .articles-table {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 800px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
