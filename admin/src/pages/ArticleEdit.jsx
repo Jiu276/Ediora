@@ -17,7 +17,8 @@ function ArticleEdit() {
     tags: [],
     domainIds: [],
     publishDate: new Date().toISOString().split('T')[0],
-    enableKeywordLinks: false
+    enableKeywordLinks: false,
+    featuredImage: ''
   });
 
   const [article, setArticle] = useState(null);
@@ -45,7 +46,8 @@ function ArticleEdit() {
             tags: data.tags || [],
             domainIds: data.domainIds || [],
             publishDate: data.publishDate ? data.publishDate.split('T')[0] : new Date().toISOString().split('T')[0],
-            enableKeywordLinks: data.enableKeywordLinks || false
+            enableKeywordLinks: data.enableKeywordLinks || false,
+            featuredImage: data.featuredImage || ''
           });
           setLoading(false);
         })
@@ -85,7 +87,8 @@ function ArticleEdit() {
 
     const submitData = {
       ...formData,
-      publishDate: new Date(formData.publishDate).toISOString()
+      publishDate: new Date(formData.publishDate).toISOString(),
+      featuredImage: formData.featuredImage || null
     };
 
     try {
@@ -297,6 +300,40 @@ function ArticleEdit() {
             rows="3"
             placeholder="文章摘要（可选）"
           />
+        </div>
+
+        <div className="form-group">
+          <label>封面图片</label>
+          <div style={{ marginBottom: '10px' }}>
+            {formData.featuredImage && (
+              <div style={{ marginBottom: '10px' }}>
+                <img 
+                  src={formData.featuredImage} 
+                  alt="封面图片预览" 
+                  style={{ 
+                    maxWidth: '100%', 
+                    maxHeight: '300px', 
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    display: 'block'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+            <input
+              type="text"
+              value={formData.featuredImage}
+              onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
+              placeholder="输入图片URL（如：https://example.com/image.jpg）"
+              style={{ width: '100%', padding: '8px' }}
+            />
+            <p style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+              提示：可以输入图片URL，或点击"发布文章"按钮在发布向导中选择/生成图片
+            </p>
+          </div>
         </div>
 
         <div className="form-group">

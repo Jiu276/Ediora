@@ -13,6 +13,11 @@ const themeComponents: Record<string, any> = {
   comprehensive: dynamic(() => import('@/themes/comprehensive/HomeTemplate'), { ssr: true }),
   'magazine-multi': dynamic(() => import('@/themes/magazine-multi/HomeTemplate'), { ssr: true }),
   'minimal-lifestyle': dynamic(() => import('@/themes/minimal-lifestyle/HomeTemplate'), { ssr: true }),
+  'travel-blog': dynamic(() => import('@/themes/travel-blog/HomeTemplate'), { ssr: true }),
+  'modern-magazine': dynamic(() => import('@/themes/modern-magazine/HomeTemplate'), { ssr: true }),
+  'modern-simple': dynamic(() => import('@/themes/modern-simple/HomeTemplate'), { ssr: true }),
+  'lifestyle-daily': dynamic(() => import('@/themes/lifestyle-daily/HomeTemplate'), { ssr: true }),
+  'zen-blog': dynamic(() => import('@/themes/zen-blog/HomeTemplate'), { ssr: true }),
 }
 
 interface Article {

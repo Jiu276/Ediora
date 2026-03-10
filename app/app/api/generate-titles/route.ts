@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '请输入提示词' }, { status: 400 })
     }
 
+    // Titles can include Chinese translations for admin preview,
+    // but saving to DB is still English-only (enforced at write endpoints).
     const titles = await generateTitles(prompt.trim())
 
     // 兜底：如果未解析到有效标题，基于提示词生成10个简单变体
@@ -25,9 +27,9 @@ export async function POST(request: NextRequest) {
     // 增加 id 和 score 兼容前端
     const enriched = safeTitles.map((t: any, idx: number) => ({
       id: t.id || `title-${Date.now()}-${idx + 1}`,
-      title: t.title_zh || t.title || '',
-      title_zh: t.title_zh || t.title || '',
-      title_en: t.title_en || '',
+      title: t.title_en || t.title || '',
+      title_zh: t.title_zh || '',
+      title_en: t.title_en || t.title || '',
       score: Math.round((t.score || 0.9) * 100),
     }))
     

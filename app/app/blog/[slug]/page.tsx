@@ -58,6 +58,11 @@ const themeArticleDetailComponents: Record<string, any> = {
   comprehensive: dynamic(() => import('@/themes/comprehensive/ArticleDetailTemplate'), { ssr: true }),
   'magazine-multi': dynamic(() => import('@/themes/magazine-multi/ArticleDetailTemplate'), { ssr: true }),
   'minimal-lifestyle': dynamic(() => import('@/themes/minimal-lifestyle/ArticleDetailTemplate'), { ssr: true }),
+  'travel-blog': dynamic(() => import('@/themes/travel-blog/ArticleDetailTemplate'), { ssr: true }),
+  'modern-magazine': dynamic(() => import('@/themes/modern-magazine/ArticleDetailTemplate'), { ssr: true }),
+  'modern-simple': dynamic(() => import('@/themes/modern-simple/ArticleDetailTemplate'), { ssr: true }),
+  'lifestyle-daily': dynamic(() => import('@/themes/lifestyle-daily/ArticleDetailTemplate'), { ssr: true }),
+  'zen-blog': dynamic(() => import('@/themes/zen-blog/ArticleDetailTemplate'), { ssr: true }),
 }
 
 export default function ArticleDetailPage() {

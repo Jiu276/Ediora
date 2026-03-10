@@ -15,16 +15,16 @@ export async function POST(request: NextRequest) {
 
     // 简单的模板生成（作为降级方案）
     const templates = [
-      `${prompt}：完整指南`,
-      `如何${prompt}：实用技巧分享`,
-      `${prompt}的10个关键要点`,
-      `深度解析：${prompt}`,
-      `${prompt}：从入门到精通`,
-      `关于${prompt}的全面解析`,
-      `${prompt}：最佳实践指南`,
-      `掌握${prompt}的核心方法`,
-      `${prompt}：专业分析与建议`,
-      `${prompt}：实用操作手册`,
+      `${prompt}: A Complete Guide`,
+      `How to ${prompt}: Practical Tips`,
+      `10 Key Takeaways About ${prompt}`,
+      `Deep Dive: ${prompt}`,
+      `${prompt}: From Beginner to Pro`,
+      `Everything You Need to Know About ${prompt}`,
+      `${prompt}: Best Practices`,
+      `Mastering ${prompt}: Core Principles`,
+      `${prompt}: Professional Insights`,
+      `${prompt}: A Practical Playbook`,
     ]
 
     const titles = templates.map((title, index) => ({
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       titles,
       source: 'fallback', // 标记为降级方案
-      message: 'AI API 不可用，已使用模板生成'
+      message: 'AI API unavailable; used fallback templates.'
     })
   } catch (error) {
     console.error('Error in fallback generation:', error)

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -93,13 +93,13 @@ export default function DarkArticleDetailTemplate({
             </Link>
             <div>
               <Link href="/blog" style={{ marginRight: 24, color: config.colors.text, textDecoration: 'none' }}>
-                文章列表
+                Articles
               </Link>
               <Link href="/archive" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none' }}>
-                归档
+                Archive
               </Link>
               <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none' }}>
-                管理后台
+                Admin
               </Link>
             </div>
           </div>
@@ -153,14 +153,14 @@ export default function DarkArticleDetailTemplate({
             }}
           >
             <Space size="middle" style={{ marginBottom: 8 }}>
-              <span>✍️ 作者: {article.author}</span>
+              <span>✍️ Author: {article.author}</span>
               {article.publishDate && (
-                <span>📅 发布时间: {new Date(article.publishDate).toLocaleString('zh-CN')}</span>
+                <span>📅 Published: {new Date(article.publishDate).toLocaleString('en-US')}</span>
               )}
               {article.viewCount !== undefined && (
                 <Space>
                   <EyeOutlined />
-                  <span>{article.viewCount} 次阅读</span>
+                  <span>{article.viewCount} views</span>
                 </Space>
               )}
               {article.category && (
@@ -224,7 +224,7 @@ export default function DarkArticleDetailTemplate({
 
             <div style={{ marginTop: 24 }}>
               <Typography.Text strong style={{ color: config.colors.text, marginRight: 16 }}>
-                分享文章：
+                Share
               </Typography.Text>
               <ShareButtons
                 title={article.title}
@@ -238,7 +238,7 @@ export default function DarkArticleDetailTemplate({
         {/* 关联域名 */}
         {customDomains.length > 0 && (
           <Card
-            title="相关域名"
+            title="Related domains"
             style={{
               marginTop: 24,
               borderRadius: 12,
@@ -268,7 +268,7 @@ export default function DarkArticleDetailTemplate({
         {/* 相关链接 */}
         {links.length > 0 && (
           <Card
-            title="相关链接"
+            title="Related links"
             style={{
               marginTop: 24,
               borderRadius: 12,
@@ -302,7 +302,7 @@ export default function DarkArticleDetailTemplate({
         {/* 相关文章推荐 */}
         {relatedArticles.length > 0 && (
           <Card
-            title="相关文章"
+            title="Related articles"
             style={{
               marginTop: 24,
               borderRadius: 12,
@@ -366,7 +366,7 @@ export default function DarkArticleDetailTemplate({
                           )}
                           {related.publishDate && (
                             <span style={{ color: config.colors.subtext, fontSize: '12px' }}>
-                              {new Date(related.publishDate).toLocaleDateString('zh-CN')}
+                              {new Date(related.publishDate).toLocaleDateString('en-US')}
                             </span>
                           )}
                         </div>

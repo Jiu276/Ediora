@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
@@ -51,6 +52,16 @@ export default function RichTextEditor({
       },
     },
   })
+
+  // Keep editor in sync when `content` prop changes (e.g. initial load / restore).
+  useEffect(() => {
+    if (!editor) return
+    const current = editor.getHTML()
+    const next = content || ''
+    if (current !== next) {
+      editor.commands.setContent(next, false)
+    }
+  }, [content, editor])
 
   if (!editor) {
     return null

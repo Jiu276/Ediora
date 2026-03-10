@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { Card, Col, Row, Space, Tag, Typography, Input, Button } from 'antd'
@@ -72,13 +72,13 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
             <Col>
               <Link href="/" style={{ textDecoration: 'none' }}>
                 <Title level={2} style={{ margin: 0, color: config.colors.primary, fontWeight: 700 }}>
-                  我的博客
+                  My Blog
                 </Title>
               </Link>
             </Col>
             <Col flex="auto" style={{ maxWidth: 500, margin: '0 24px' }}>
               <Search
-                placeholder="搜索文章..."
+                placeholder="Search articles..."
                 allowClear
                 enterButton={<SearchOutlined />}
                 size="large"
@@ -92,10 +92,10 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
             <Col>
               <Space>
                 <Button type="link" href="/blog" style={{ color: config.colors.text, fontWeight: 500 }}>
-                  所有文章
+                  All articles
                 </Button>
                 <Button type="link" href="/admin" style={{ color: config.colors.text }}>
-                  管理
+                  Admin
                 </Button>
               </Space>
             </Col>
@@ -154,7 +154,7 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
                 <div style={{ padding: '24px' }}>
                   <Space style={{ marginBottom: 12 }}>
                     <Tag icon={<FireOutlined />} color={config.colors.primary} style={{ fontSize: 12 }}>
-                      精选
+                      Featured
                     </Tag>
                     {featuredArticle.category && (
                       <Tag icon={<FolderOutlined />} color="default">
@@ -190,7 +190,7 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
                     {featuredArticle.publishDate && (
                       <Text style={{ color: config.colors.subtext }}>
                         <CalendarOutlined style={{ marginRight: 4 }} />
-                        {new Date(featuredArticle.publishDate).toLocaleDateString('zh-CN')}
+                        {new Date(featuredArticle.publishDate).toLocaleDateString('en-US')}
                       </Text>
                     )}
                   </Space>
@@ -204,7 +204,7 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
         {otherArticles.length > 0 ? (
           <>
             <Title level={3} style={{ marginBottom: 24, color: config.colors.text }}>
-              {searchKeyword ? '搜索结果' : '最新文章'}
+              {searchKeyword ? 'Search results' : 'Latest articles'}
             </Title>
             <Row gutter={[24, 24]}>
               {otherArticles.map((article) => (
@@ -281,7 +281,7 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
                       >
                         {article.excerpt
                           ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 80) + '...'
-                          : '点击阅读...'}
+                          : 'Read more...'}
                       </Paragraph>
                       <Space size="small" style={{ marginTop: 12 }}>
                         {article.category && (
@@ -291,7 +291,7 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
                         )}
                         {article.publishDate && (
                           <Tag icon={<CalendarOutlined />} color="default" style={{ fontSize: 12 }}>
-                            {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                            {new Date(article.publishDate).toLocaleDateString('en-US')}
                           </Tag>
                         )}
                       </Space>
@@ -304,10 +304,10 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
         ) : filteredArticles.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
             <Title level={3} style={{ color: config.colors.subtext }}>
-              {searchKeyword ? '未找到相关文章' : '暂无文章'}
+              {searchKeyword ? 'No matching articles' : 'No articles yet'}
             </Title>
             <Paragraph style={{ color: config.colors.subtext }}>
-              {searchKeyword ? '请尝试其他关键词' : '快去发布第一篇文章吧！'}
+              {searchKeyword ? 'Try different keywords' : 'Publish your first article!'}
             </Paragraph>
           </div>
         ) : null}
@@ -333,7 +333,7 @@ export default function MagazineHomeTemplate({ articles, config, searchKeyword =
       >
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
           <Paragraph style={{ color: config.colors.subtext, margin: 0, fontSize: 14 }}>
-            © {new Date().getFullYear()} 我的博客 · 用心记录生活
+            © {new Date().getFullYear()} My Blog
           </Paragraph>
         </div>
       </footer>

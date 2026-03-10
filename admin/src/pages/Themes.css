@@ -36,32 +36,68 @@
 }
 
 .theme-preview {
-  height: 200px;
-  background: #f9fafb;
-  padding: 1rem;
+  height: 240px;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .preview-header {
-  height: 40px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  margin-bottom: 1rem;
+  height: 50px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.preview-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.preview-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: block;
+}
+
+.preview-content-wrapper {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px 12px 0 0;
+  margin-top: -8px;
 }
 
 .preview-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 10px;
+  height: 100%;
 }
 
 .preview-line {
-  height: 12px;
-  background: #e5e7eb;
   border-radius: 4px;
 }
 
-.preview-line.short {
-  width: 60%;
+.preview-line.title-line {
+  margin-bottom: 4px;
+}
+
+.preview-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.preview-tag {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  display: inline-block;
 }
 
 .theme-info {
@@ -71,30 +107,50 @@
 .theme-info h3 {
   margin-bottom: 0.5rem;
   color: #1f2937;
+  font-size: 1.1rem;
+}
+
+.theme-description {
+  color: #4b5563;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  min-height: 2.5em;
 }
 
 .theme-slug {
-  color: #6b7280;
-  font-size: 0.9rem;
+  color: #9ca3af;
+  font-size: 0.8rem;
   margin-bottom: 0.5rem;
+  font-family: 'Courier New', monospace;
 }
 
 .active-badge {
-  display: inline-block;
-  background: #3b82f6;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10b981;
   color: #fff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 16px;
   font-size: 0.85rem;
   font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.check-icon {
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .theme-actions {
   padding: 0 1.5rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
 }
 
 .btn-activate {
-  width: 100%;
+  flex: 1;
   background: #3b82f6;
   color: #fff;
   border: none;
@@ -102,10 +158,30 @@
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  transition: background 0.2s;
 }
 
 .btn-activate:hover {
   background: #2563eb;
+}
+
+.btn-edit {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
 }
 
 .loading {

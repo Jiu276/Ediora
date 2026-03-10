@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -88,13 +88,13 @@ export default function CardArticleDetailTemplate({
             </Link>
             <div>
               <Link href="/blog" style={{ marginRight: 24, color: config.colors.text, textDecoration: 'none', fontWeight: 500 }}>
-                文章列表
+                Articles
               </Link>
               <Link href="/archive" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none' }}>
-                归档
+                Archive
               </Link>
               <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none' }}>
-                管理
+                Admin
               </Link>
             </div>
           </div>
@@ -163,16 +163,16 @@ export default function CardArticleDetailTemplate({
               }}
             >
               <Space size="large" style={{ marginBottom: 12 }}>
-                <span style={{ fontSize: 15 }}>✍️ 作者: {article.author}</span>
+                <span style={{ fontSize: 15 }}>✍️ Author: {article.author}</span>
                 {article.publishDate && (
                   <span style={{ fontSize: 15 }}>
-                    📅 发布时间: {new Date(article.publishDate).toLocaleString('zh-CN')}
+                    📅 Published: {new Date(article.publishDate).toLocaleString('en-US')}
                   </span>
                 )}
                 {article.viewCount !== undefined && (
                   <Space style={{ fontSize: 15 }}>
                     <EyeOutlined />
-                    <span>{article.viewCount} 次阅读</span>
+                    <span>{article.viewCount} views</span>
                   </Space>
                 )}
               </Space>
@@ -229,7 +229,7 @@ export default function CardArticleDetailTemplate({
 
             <div style={{ marginTop: 24 }}>
               <Typography.Text strong style={{ color: config.colors.text, marginRight: 16 }}>
-                分享文章：
+                Share
               </Typography.Text>
               <ShareButtons
                 title={article.title}
@@ -244,7 +244,7 @@ export default function CardArticleDetailTemplate({
         {/* 关联域名 */}
         {customDomains.length > 0 && (
           <Card
-            title="相关域名"
+            title="Related domains"
             style={{
               marginTop: 32,
               borderRadius: 20,
@@ -274,7 +274,7 @@ export default function CardArticleDetailTemplate({
         {/* 相关链接 */}
         {links.length > 0 && (
           <Card
-            title="相关链接"
+            title="Related links"
             style={{
               marginTop: 32,
               borderRadius: 20,
@@ -308,7 +308,7 @@ export default function CardArticleDetailTemplate({
         {/* 相关文章推荐 */}
         {relatedArticles.length > 0 && (
           <Card
-            title="相关文章"
+            title="Related articles"
             style={{
               marginTop: 32,
               borderRadius: 20,
@@ -373,7 +373,7 @@ export default function CardArticleDetailTemplate({
                           )}
                           {related.publishDate && (
                             <span style={{ color: config.colors.subtext, fontSize: '12px' }}>
-                              {new Date(related.publishDate).toLocaleDateString('zh-CN')}
+                              {new Date(related.publishDate).toLocaleDateString('en-US')}
                             </span>
                           )}
                         </div>

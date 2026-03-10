@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -262,7 +262,7 @@ export default function MinimalArticleDetailTemplate({
                     )}
                     {related.publishDate && (
                       <span style={{ color: config.colors.subtext, fontSize: 12 }}>
-                        {new Date(related.publishDate).toLocaleDateString('zh-CN')}
+                        {new Date(related.publishDate).toLocaleDateString('en-US')}
                       </span>
                     )}
                   </div>

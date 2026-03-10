@@ -9,6 +9,47 @@ import { generateSlug } from '@/lib/slug'
 import { autoMatchTags, createArticleTags, createArticleTagsFromMatch } from '@/lib/autoTags'
 import { getCurrentUser } from '@/lib/auth'
 
+function containsCJK(input: unknown) {
+  if (input == null) return false
+  const text = Array.isArray(input) ? input.join(' ') : String(input)
+  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text)
+}
+
+function escapeRegExp(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function injectKeywordLinksIntoHtml(
+  html: string,
+  links: Array<{ keyword: string; url: string }>
+) {
+  if (!html || !Array.isArray(links) || links.length === 0) return html
+
+  const safeLinks = links
+    .map((l) => ({
+      keyword: String(l.keyword || '').trim(),
+      url: String(l.url || '').trim(),
+    }))
+    .filter((l) => l.keyword && l.url)
+
+  if (safeLinks.length === 0) return html
+
+  // 只在文本块（p / h1-6 / figcaption）内部替换，避免破坏 <img> 等标签属性
+  const blockRegex = /<(p|h1|h2|h3|h4|h5|h6|figcaption)([^>]*)>([\s\S]*?)<\/\1>/gi
+
+  return html.replace(blockRegex, (match, tag, attrs, inner) => {
+    let updated = inner
+    for (const link of safeLinks) {
+      const re = new RegExp(`\\b${escapeRegExp(link.keyword)}\\b`, 'g')
+      updated = updated.replace(
+        re,
+        `<a href="${link.url}" target="_blank" rel="nofollow noopener noreferrer">${link.keyword}</a>`
+      )
+    }
+    return `<${tag}${attrs}>${updated}</${tag}>`
+  })
+}
+
 // GET /api/articles - 获取所有文章（支持状态筛选、搜索、排序）
 export async function GET(request: NextRequest) {
   try {
@@ -128,14 +169,34 @@ export async function POST(request: NextRequest) {
       metaDescription,
       metaKeywords,
       images = [], // [{url, thumbnail, description, source}]
+      links = [], // [{ keyword, url }]
     } = body
+
+    // English-only guard for future content.
+    if (
+      containsCJK(title) ||
+      containsCJK(content) ||
+      containsCJK(excerpt) ||
+      containsCJK(metaTitle) ||
+      containsCJK(metaDescription) ||
+      containsCJK(metaKeywords) ||
+      (Array.isArray(images) && images.some((img: any) => containsCJK(img?.description))) ||
+      (Array.isArray(links) && links.some((l: any) => containsCJK(l?.keyword) || containsCJK(l?.url)))
+    ) {
+      return NextResponse.json(
+        { error: '内容必须为英文（不可包含中文字符）' },
+        { status: 400 }
+      )
+    }
     
-    // 生成基础 slug（支持中文）
+    // 生成基础 slug（英文站点：禁止中文标题）
     let baseSlug = generateSlug(title)
     
-    // 如果生成的 slug 为空（可能是纯中文标题），使用 ID 作为后备
     if (!baseSlug || baseSlug.trim() === '') {
-      baseSlug = 'article'
+      return NextResponse.json(
+        { error: '标题必须为英文（无法生成 slug）' },
+        { status: 400 }
+      )
     }
     
     // 确保 slug 唯一性
@@ -171,6 +232,12 @@ export async function POST(request: NextRequest) {
       const category = await prisma.category.findFirst({
         where: { id: categoryId, deletedAt: null },
       })
+      if (category?.name && containsCJK(category.name)) {
+        return NextResponse.json(
+          { error: '标签类别必须为英文（请先创建英文标签）' },
+          { status: 400 }
+        )
+      }
       categoryName = category?.name || null
     }
     
@@ -190,11 +257,17 @@ export async function POST(request: NextRequest) {
       ? new Date(publishDate) 
       : (status === 'published' ? new Date() : null)
 
+    // If enabled, inject keyword links into HTML before saving.
+    const finalContentWithLinks =
+      enableKeywordLinks && Array.isArray(links) && links.length > 0
+        ? injectKeywordLinksIntoHtml(content || '', links)
+        : (content || '')
+
     const article = await prisma.article.create({
       data: {
         title,
         slug,
-        content: content || '',
+        content: finalContentWithLinks,
         excerpt: excerpt || '',
         status: status as 'draft' | 'published',
         categoryId,
@@ -221,6 +294,21 @@ export async function POST(request: NextRequest) {
         sortOrder: idx,
       }))
       await prisma.articleImage.createMany({ data: imageData })
+    }
+
+    // 写入文章超链接（可用于后台管理/追踪）
+    if (Array.isArray(links) && links.length > 0) {
+      const linkData = links
+        .map((l: any) => ({
+          articleId: article.id,
+          keyword: String(l.keyword || '').trim(),
+          url: String(l.url || '').trim(),
+        }))
+        .filter((l) => l.keyword && l.url)
+
+      if (linkData.length > 0) {
+        await prisma.articleLink.createMany({ data: linkData })
+      }
     }
 
     // 自动匹配并创建文章标签（智能模式）

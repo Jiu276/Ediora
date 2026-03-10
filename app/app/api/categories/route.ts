@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+function containsCJK(input: unknown) {
+  if (input == null) return false
+  const text = String(input)
+  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text)
+}
+
 // GET /api/categories - 获取所有标签类别
 export async function GET() {
   try {
@@ -32,6 +38,13 @@ export async function POST(request: NextRequest) {
     if (!name || !slug) {
       return NextResponse.json(
         { error: 'Name and slug are required' },
+        { status: 400 }
+      )
+    }
+
+    if (containsCJK(name) || containsCJK(slug) || containsCJK(description)) {
+      return NextResponse.json(
+        { error: 'Category must be English only (no Chinese characters).' },
         { status: 400 }
       )
     }

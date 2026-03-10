@@ -107,9 +107,9 @@ export default function ArticleTitlesPage() {
                 ...prev,
                 {
                   id: data.data.index.toString(),
-                  title: data.data.title_zh || data.data.title || '',
-                  titleZh: data.data.title_zh,
-                  titleEn: data.data.title_en,
+                  title: data.data.title_en || data.data.title || '',
+                  titleZh: data.data.title_zh || '',
+                  titleEn: data.data.title_en || data.data.title || '',
                   score: Math.round((data.data.score || 0.9) * 100),
                 },
               ]
@@ -296,21 +296,11 @@ export default function ArticleTitlesPage() {
 
     setSaving(true)
     try {
-      // 根据英文/中文偏好，整理要保存的标题字段
       const payloadTitles = titlesToSave.map(t => {
-        const mainTitle = isEnglishPreferred
-          ? t.titleEn || t.title || ''
-          : t.titleZh || t.title || ''
-
-        const descParts: string[] = []
-        if (isEnglishPreferred && (t.titleZh || t.title)) {
-          descParts.push(`中文：${t.titleZh || t.title}`)
-        }
-        descParts.push(`推荐度: ${t.score}%`)
-
+        const mainTitle = t.titleEn || t.title || ''
         return {
           title: mainTitle,
-          description: descParts.join(' | '),
+          description: `Relevance: ${t.score}%`,
           score: t.score,
         }
       })
@@ -327,17 +317,22 @@ export default function ArticleTitlesPage() {
 
       if (data.success) {
         const savedCount = data.saved || 0
-        const totalCount = data.total || generatedTitles.length
-        if (savedCount === totalCount) {
+        const totalCount = data.total || payloadTitles.length
+        const errorCount = Array.isArray(data.errors) ? data.errors.length : 0
+        const existsOrSkipped = Math.max(totalCount - savedCount - errorCount, 0)
+
+        if (savedCount > 0) {
           message.success(`成功保存 ${savedCount} 个标题到数据库`)
-        } else {
-          message.warning(`成功保存 ${savedCount} 个标题，${totalCount - savedCount} 个已存在（已跳过）`)
+        }
+        if (existsOrSkipped > 0) {
+          message.info(`${existsOrSkipped} 个标题已存在（已跳过）`)
+        }
+        if (errorCount > 0) {
+          message.error(`有 ${errorCount} 个标题保存失败（请检查是否包含中文/特殊字符）`)
         }
         
         // 保存后刷新已保存列表
-        if (activeTab === 'saved') {
-          fetchSavedTitles()
-        }
+        fetchSavedTitles()
         
         // 如果保存的是选中的标题，只移除已保存的
         if (saveSelectedOnly && selectedTitleIds.length > 0) {

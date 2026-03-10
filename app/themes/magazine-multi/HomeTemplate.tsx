@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Input, Button, Card, Row, Col, Typography, Tag, Space, List, Divider } from 'antd'
@@ -45,7 +45,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
 
   const handleSubscribe = () => {
     // TODO: 实现订阅功能
-    alert('订阅功能待实现')
+    alert('Subscription coming soon')
   }
 
   const filteredArticles = searchKeyword
@@ -270,7 +270,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                       <Paragraph style={{ marginBottom: 16, color: '#666', fontSize: 14 }}>
                         {latestArticles[0].excerpt
                           ? latestArticles[0].excerpt.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
-                          : '点击阅读更多...'}
+                          : 'Read more...'}
                       </Paragraph>
                       <Space size="small" style={{ fontSize: 12, color: '#999' }}>
                         <span><UserOutlined /> {latestArticles[0].author}</span>

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { Card, Row, Col, Typography, Empty, Skeleton, Pagination, Tag, Space, Input } from 'antd'
@@ -115,7 +115,7 @@ export default function BlogListTemplate({
             ))}
           </Row>
         ) : filteredArticles.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <>
             <Row gutter={[32, 32]}>
@@ -192,10 +192,10 @@ export default function BlogListTemplate({
                       >
                         {article.excerpt
                           ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 120) + '...'
-                          : '点击阅读更多...'}
+                          : 'Read more...'}
                       </Paragraph>
                       <Space size="small" style={{ fontSize: 12, color: '#999' }}>
-                        <span><CalendarOutlined style={{ marginRight: 4 }} />{article.publishDate ? new Date(article.publishDate).toLocaleDateString('zh-CN') : ''}</span>
+                        <span><CalendarOutlined style={{ marginRight: 4 }} />{article.publishDate ? new Date(article.publishDate).toLocaleDateString('en-US') : ''}</span>
                         {article.category && (
                           <Tag icon={<FolderOutlined />} color={config.colors.primary} style={{ fontSize: 11, margin: 0 }}>
                             {article.category.name}

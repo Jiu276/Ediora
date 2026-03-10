@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Input, Button, Card, Row, Col, Typography, Tag, Space, List } from 'antd'
@@ -44,7 +44,7 @@ export default function MinimalLifestyleHomeTemplate({ articles, config, searchK
 
   const handleSubscribe = () => {
     // TODO: 实现订阅功能
-    alert('订阅功能待实现')
+    alert('Subscription coming soon')
   }
 
   const filteredArticles = searchKeyword

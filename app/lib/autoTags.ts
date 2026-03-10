@@ -49,18 +49,22 @@ export async function autoMatchTags(
       }
     }
 
-    // 构建关键词匹配规则
+    const containsCJK = (input: string) =>
+      /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(input)
+
+    // Build keyword matching rules based on English slugs.
+    // This avoids defaulting new English content to Chinese categories.
     const keywordMap: Record<string, string[]> = {
-      '生活': ['生活', '日常', '家居', '家庭', '生活方式', '生活品质', '生活技巧', '生活指南', '生活智慧', '生活美学'],
-      '旅游': ['旅游', '旅行', '攻略', '景点', '目的地', '游记', '出行', '度假', '自由行', '跟团'],
-      '科技': ['科技', '技术', 'AI', '人工智能', '互联网', '软件', '硬件', '创新', '数字化', '智能'],
-      '美食': ['美食', '食物', '烹饪', '料理', '菜谱', '餐厅', '小吃', '甜品', '饮品', '食材'],
-      '健康': ['健康', '养生', '保健', '运动', '健身', '饮食', '营养', '医疗', '疾病', '预防'],
-      '教育': ['教育', '学习', '培训', '课程', '知识', '技能', '学校', '学生', '老师', '教学'],
-      '娱乐': ['娱乐', '电影', '音乐', '游戏', '综艺', '明星', '八卦', '休闲', '放松', '消遣'],
-      '财经': ['财经', '金融', '投资', '理财', '股票', '基金', '经济', '商业', '创业', '赚钱'],
-      '体育': ['体育', '运动', '比赛', '健身', '足球', '篮球', '跑步', '训练', '竞技', '运动员'],
-      '时尚': ['时尚', '穿搭', '服装', '美容', '化妆', '搭配', '潮流', '风格', '品牌', '设计'],
+      life: ['life', 'lifestyle', 'home', 'family', 'daily', 'habits', 'well-being', 'wellbeing'],
+      travel: ['travel', 'trip', 'itinerary', 'destination', 'vacation', 'tour', 'guide'],
+      tech: ['tech', 'technology', 'ai', 'software', 'hardware', 'internet', 'digital'],
+      food: ['food', 'recipe', 'cook', 'cooking', 'restaurant', 'dessert', 'drink'],
+      health: ['health', 'fitness', 'workout', 'nutrition', 'wellness', 'medical', 'prevention'],
+      education: ['education', 'learning', 'course', 'study', 'school', 'teacher', 'training'],
+      entertainment: ['entertainment', 'movie', 'music', 'game', 'show', 'celebrity'],
+      finance: ['finance', 'investment', 'money', 'business', 'economy', 'stocks', 'fund'],
+      sports: ['sports', 'football', 'basketball', 'running', 'training', 'match'],
+      fashion: ['fashion', 'style', 'outfit', 'beauty', 'makeup', 'trend', 'brand'],
     }
 
     // 合并标题和内容进行匹配
@@ -69,7 +73,7 @@ export async function autoMatchTags(
 
     // 计算每个类别的匹配分数
     for (const category of categories) {
-      const keywords = keywordMap[category.name] || []
+      const keywords = keywordMap[category.slug] || keywordMap[category.name] || []
       let score = 0
 
       // 检查类别名称是否在文本中（高权重）
@@ -172,19 +176,13 @@ export async function autoMatchTags(
       }
     }
 
-    // 如果没有任何匹配，使用默认标签（生活）
+    // If no match, do not default to a Chinese category.
     if (sortedCategories.length === 0) {
-      const defaultCategory = categories.find((c) => c.name === '生活' || c.slug === 'life')
-      if (defaultCategory) {
-        return {
-          categoryIds: [defaultCategory.id],
-          confidence: 0.3,
-        }
-      }
-      // 如果没有默认标签，返回第一个类别
+      // Prefer the first non-CJK category if it exists; otherwise return none.
+      const firstNonCjk = categories.find((c) => !containsCJK(c.name))
       return {
-        categoryIds: categories.length > 0 ? [categories[0].id] : [],
-        confidence: 0.2,
+        categoryIds: firstNonCjk ? [firstNonCjk.id] : [],
+        confidence: firstNonCjk ? 0.2 : 0,
       }
     }
 
@@ -215,6 +213,11 @@ export async function createSmartTag(
   autoCreate: boolean = false
 ): Promise<string | null> {
   try {
+    // English-only: reject CJK in newly created tags.
+    if (/[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(tagName)) {
+      return null
+    }
+
     // 验证标签名称
     const validation = validateTagName(tagName)
     if (!validation.valid) {

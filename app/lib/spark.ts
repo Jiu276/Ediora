@@ -28,35 +28,34 @@ function ensureApiKey() {
 }
 
 function buildTitlePrompt(userPrompt: string) {
-  return `你是专业的文章标题生成助手。根据用户提示词生成10个高质量标题。
+  return `你是专业的文章标题生成助手。根据用户提示词生成 10 个高质量英文标题，并附上中文翻译（仅用于后台预览，不用于写入数据库）。
 
 【用户提示词】
 ${userPrompt}
 
 【输出要求】
-1. 必须返回一个完整的JSON对象，格式如下：
+1) 生成 exactly 10 个标题（不多不少），每个标题必须包含：
+- title_en: English title（必须英文，不要出现中文字符）
+- title_zh: 中文翻译（可中文）
+- score: 0-1 的小数
+
+2) 标题要求：
+- 吸引人、有创意、符合 SEO
+- 多样化，避免重复
+- 标题长度建议 6-12 words（英文）
+
+3) 输出格式：
+- 只返回 JSON 对象，不要任何其他文字
+- 不要 Markdown，不要代码块
+- JSON 必须可解析
+
+返回格式示例：
 {
   "titles": [
-    { "title_zh": "中文标题", "title_en": "English Title", "score": 0.95 },
-    { "title_zh": "中文标题2", "title_en": "English Title 2", "score": 0.92 }
+    { "title_en": "English Title", "title_zh": "中文翻译", "score": 0.95 }
   ]
 }
-
-2. 标题要求：
-   - 吸引人、有创意、符合SEO优化
-   - 每个标题必须有中英文版本
-   - 标题长度30-60字符
-   - 标题要多样化，避免重复
-   - 标题要准确反映提示词的内容
-
-3. 输出格式：
-   - 只返回JSON对象，不要任何其他文字
-   - 不要使用Markdown代码块
-   - 不要使用反引号
-   - 不要分行输出字段
-   - JSON必须是有效的、可解析的
-
-请严格按照上述格式返回10个标题。`
+`
 }
 
 function buildArticlePrompt(title: string, userPrompt?: string, category?: string, domains?: string[]) {
@@ -94,8 +93,10 @@ function parseTitlesFromText(text: string) {
     // ignore
   }
 
-  // 方案2：从文本中提取 title_zh/title_en 成对字段
-  const pairMatches = Array.from(cleaned.matchAll(/"title_zh"\s*:\s*"([^"]+)"[\s\S]*?"title_en"\s*:\s*"([^"]+)"/gi))
+  // Extract title_zh/title_en pairs if present
+  const pairMatches = Array.from(
+    cleaned.matchAll(/"title_zh"\s*:\s*"([^"]+)"[\s\S]*?"title_en"\s*:\s*"([^"]+)"/gi)
+  )
   if (pairMatches.length > 0) {
     return pairMatches.slice(0, 10).map((m) => ({
       title_zh: m[1].trim(),
@@ -104,7 +105,17 @@ function parseTitlesFromText(text: string) {
     }))
   }
 
-  // 方案3：行级解析（包含 “中文 | English” 格式）
+  // Extract title_en only
+  const enMatches = Array.from(cleaned.matchAll(/"title_en"\s*:\s*"([^"]+)"/gi))
+  if (enMatches.length > 0) {
+    return enMatches.slice(0, 10).map((m) => ({
+      title_zh: '',
+      title_en: m[1].trim(),
+      score: 0.9,
+    }))
+  }
+
+  // Line parsing (e.g. "Title 1", "- Title 2", etc.)
   const lines = cleaned.split('\n').filter(l => l.trim())
   const titles: Array<{ title_zh: string; title_en: string; score: number }> = []
   for (const line of lines) {
@@ -112,18 +123,16 @@ function parseTitlesFromText(text: string) {
     if (/"titles"|"title_zh"|"title_en"|"score"/.test(line)) continue
     if (/^\s*[\{\[\}]/.test(line)) continue
 
-    const m = line.match(/^(.+?)\s*\|\s*(.+)$/)
-    if (m) {
-      titles.push({ title_zh: m[1].trim(), title_en: m[2].trim(), score: 0.9 })
-    } else if (line.trim().length > 5) {
-      titles.push({ title_zh: line.trim(), title_en: line.trim(), score: 0.85 })
+    const textLine = line.replace(/^\s*[-*\d\.\)]\s*/, '').trim()
+    if (textLine.length > 5) {
+      titles.push({ title_zh: '', title_en: textLine, score: 0.85 })
     }
     if (titles.length >= 10) break
   }
   if (titles.length === 0) {
     return Array.from({ length: 10 }, (_, i) => ({
-      title_zh: `标题 ${i + 1}`,
-      title_en: `Title ${i + 1}`,
+      title_zh: '',
+      title_en: `Option ${i + 1}: ${cleaned.substring(0, 40)}`.trim(),
       score: 0.8,
     }))
   }
@@ -183,17 +192,36 @@ export async function generateTitles(
       const data = await res.json()
       const content = data?.choices?.[0]?.message?.content || ''
       console.log(`[${model}] AI返回内容:`, content.substring(0, 500)) // 调试日志
-      const titles = parseTitlesFromText(content)
+      const parsed = parseTitlesFromText(content)
+      const titles = (Array.isArray(parsed) ? parsed : []).map((t: any) => ({
+        title_zh: (t.title_zh || '').trim(),
+        title_en: (t.title_en || t.title || '').trim(),
+        score: typeof t.score === 'number' ? t.score : 0.9,
+      }))
       // 过滤占位标题
       const validTitles = titles.filter((t: { title_zh: string; title_en: string; score: number }) => {
-        const zh = (t.title_zh || '').trim()
         const en = (t.title_en || '').trim()
-        const isPlaceholder = /^标题\s*\d+$/i.test(zh) || /^title\s*\d+$/i.test(en)
+        const isPlaceholder = /^title\s*\d+$/i.test(en)
         return !isPlaceholder
       })
       if (validTitles.length > 0) {
-        console.log(`[${model}] 解析到 ${validTitles.length} 个有效标题`)
-        return validTitles
+        const unique = Array.from(new Set(validTitles.map(t => t.title_en)))
+          .map((title_en) => validTitles.find(t => t.title_en === title_en)!)
+          .slice(0, 10)
+
+        // Ensure always 10 titles for UI expectations
+        const padded = [...unique]
+        let i = 1
+        while (padded.length < 10) {
+          padded.push({
+            title_zh: '',
+            title_en: `${prompt.replace(/\s+/g, ' ').trim()} - Option ${i++}`.slice(0, 80),
+            score: 0.8,
+          })
+        }
+
+        console.log(`[${model}] Parsed ${padded.length} English titles`)
+        return padded
       }
       console.warn(`[${model}] 解析结果全是占位标题，尝试下一个模型`)
     } catch (err) {

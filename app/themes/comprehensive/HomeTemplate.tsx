@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Input, Button, Card, Row, Col, Typography, Tag, Space, Divider } from 'antd'
@@ -160,12 +160,12 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                   >
                     {featuredArticle.excerpt
                       ? featuredArticle.excerpt.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
-                      : '点击阅读完整内容...'}
+                      : 'Read more...'}
                   </Paragraph>
                   <Space size="large" style={{ marginBottom: 24, fontSize: '14px', color: config.colors.subtext }}>
                     <span><UserOutlined style={{ marginRight: 4 }} />{featuredArticle.author}</span>
                     {featuredArticle.publishDate && (
-                      <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(featuredArticle.publishDate).toLocaleDateString('zh-CN')}</span>
+                      <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(featuredArticle.publishDate).toLocaleDateString('en-US')}</span>
                     )}
                     {featuredArticle.viewCount !== undefined && (
                       <span><EyeOutlined style={{ marginRight: 4 }} />{featuredArticle.viewCount}</span>
@@ -184,7 +184,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                         fontWeight: 500,
                       }}
                     >
-                      阅读全文 <RightOutlined />
+                      Read more <RightOutlined />
                     </Button>
                   </Link>
                 </div>
@@ -201,10 +201,10 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
             {!searchKeyword && (
               <div style={{ textAlign: 'center', marginBottom: 48 }}>
                 <Title level={2} style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: 16, color: config.colors.text }}>
-                  最新文章
+                  Latest articles
                 </Title>
                 <Paragraph style={{ fontSize: '16px', color: config.colors.subtext }}>
-                  发现精彩内容，探索无限可能
+                  Discover more
                 </Paragraph>
               </div>
             )}
@@ -301,10 +301,10 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                       >
                         {article.excerpt
                           ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 80) + '...'
-                          : '点击阅读更多...'}
+                          : 'Read more...'}
                       </Paragraph>
                       <Space size="small" style={{ fontSize: 12, color: config.colors.subtext }}>
-                        <span><CalendarOutlined style={{ marginRight: 4 }} />{article.publishDate ? new Date(article.publishDate).toLocaleDateString('zh-CN') : ''}</span>
+                        <span><CalendarOutlined style={{ marginRight: 4 }} />{article.publishDate ? new Date(article.publishDate).toLocaleDateString('en-US') : ''}</span>
                         {article.viewCount !== undefined && (
                           <span><EyeOutlined style={{ marginRight: 4 }} />{article.viewCount}</span>
                         )}
@@ -323,7 +323,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
         <section style={{ padding: '60px 24px', background: config.colors.cardBackground }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <Title level={3} style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: 32, color: config.colors.text }}>
-              更多文章
+              More articles
             </Title>
             <Row gutter={[24, 16]}>
               {moreArticles.map((article, index) => (
@@ -396,12 +396,12 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                           >
                             {article.excerpt
                               ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
-                              : '点击阅读更多...'}
+                              : 'Read more...'}
                           </Paragraph>
                           <Space size="middle" style={{ fontSize: 12, color: config.colors.subtext }}>
                             <span><UserOutlined style={{ marginRight: 4 }} />{article.author}</span>
                             {article.publishDate && (
-                              <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(article.publishDate).toLocaleDateString('zh-CN')}</span>
+                              <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(article.publishDate).toLocaleDateString('en-US')}</span>
                             )}
                             {article.viewCount !== undefined && (
                               <span><EyeOutlined style={{ marginRight: 4 }} />{article.viewCount}</span>
@@ -428,7 +428,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                       fontSize: 15,
                     }}
                   >
-                    查看更多文章 <RightOutlined />
+                    View more articles <RightOutlined />
                   </Button>
                 </Link>
               </div>
@@ -446,12 +446,12 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                 关于我们
               </Title>
               <Paragraph style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, fontSize: 14 }}>
-                Ediora 是一个综合类博客平台，致力于分享优质内容，探索生活的无限可能。
+                Ediora is a content platform for sharing quality articles.
               </Paragraph>
             </Col>
             <Col xs={24} sm={12} md={8}>
               <Title level={4} style={{ color: '#fff', marginBottom: 20, fontSize: 18 }}>
-                快速链接
+                Quick links
               </Title>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <Link href="/" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontSize: 14 }}>
@@ -471,7 +471,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
               </Title>
               <Paragraph style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, fontSize: 14 }}>
                 Email: info@ediora.com<br />
-                关注我们获取最新内容
+                Follow us for updates
               </Paragraph>
             </Col>
           </Row>

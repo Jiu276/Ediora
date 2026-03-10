@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Typography, Empty, Skeleton, Pagination, Tag, Space } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
@@ -54,18 +54,18 @@ export default function MinimalBlogListTemplate({
                 letterSpacing: '2px',
               }}
             >
-              文章列表
+              Articles
             </Title>
           </Link>
           <div style={{ marginTop: 20 }}>
             <Link href="/blog" style={{ marginRight: 24, color: config.colors.primary, textDecoration: 'none', fontSize: 14 }}>
-              文章列表
+              Articles
             </Link>
             <Link href="/archive" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none', fontSize: 14 }}>
-              归档
+              Archive
             </Link>
             <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none', fontSize: 14 }}>
-              管理后台
+              Admin
             </Link>
           </div>
         </header>
@@ -82,7 +82,7 @@ export default function MinimalBlogListTemplate({
         ) : articles.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
             <Paragraph style={{ color: config.colors.subtext, fontSize: 16 }}>
-              暂无已发布的文章
+              No published articles yet
             </Paragraph>
           </div>
         ) : (
@@ -121,7 +121,7 @@ export default function MinimalBlogListTemplate({
                     {article.publishDate && (
                       <span>
                         <CalendarOutlined style={{ marginRight: 4 }} />
-                        {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                        {new Date(article.publishDate).toLocaleDateString('en-US')}
                       </span>
                     )}
                     {article.category && (
@@ -151,7 +151,7 @@ export default function MinimalBlogListTemplate({
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
               showSizeChanger={false}
-              showTotal={(total) => `共 ${total} 篇文章`}
+              showTotal={(total) => `${total} articles`}
               simple
             />
           </div>

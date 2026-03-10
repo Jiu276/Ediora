@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, Row, Col, Typography, Empty, Skeleton, Pagination, Tag, Space } from 'antd'
 import { CalendarOutlined, FolderOutlined, FireOutlined } from '@ant-design/icons'
@@ -68,13 +68,13 @@ export default function MagazineBlogListTemplate({
             </Link>
             <div>
               <Link href="/blog" style={{ marginRight: 24, color: config.colors.text, textDecoration: 'none', fontWeight: 500 }}>
-                文章列表
+                Articles
               </Link>
               <Link href="/archive" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none' }}>
-                归档
+                Archive
               </Link>
               <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none' }}>
-                管理
+                Admin
               </Link>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function MagazineBlogListTemplate({
       {/* 主内容区 */}
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 24px' }}>
         <Title level={1} style={{ textAlign: 'center', marginBottom: 48, color: config.colors.text }}>
-          文章列表
+          Articles
         </Title>
 
         {loading ? (
@@ -99,7 +99,7 @@ export default function MagazineBlogListTemplate({
             ))}
           </Row>
         ) : articles.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <>
             {/* 特色文章 - 大图展示 */}
@@ -143,7 +143,7 @@ export default function MagazineBlogListTemplate({
                     <div style={{ padding: '24px' }}>
                       <Space style={{ marginBottom: 12 }}>
                         <Tag icon={<FireOutlined />} color={config.colors.primary} style={{ fontSize: 12 }}>
-                          精选
+                          Featured
                         </Tag>
                         {featuredArticle.category && (
                           <Tag icon={<FolderOutlined />} color="default">
@@ -179,7 +179,7 @@ export default function MagazineBlogListTemplate({
                         {featuredArticle.publishDate && (
                           <span style={{ color: config.colors.subtext }}>
                             <CalendarOutlined style={{ marginRight: 4 }} />
-                            {new Date(featuredArticle.publishDate).toLocaleDateString('zh-CN')}
+                            {new Date(featuredArticle.publishDate).toLocaleDateString('en-US')}
                           </span>
                         )}
                       </Space>
@@ -193,7 +193,7 @@ export default function MagazineBlogListTemplate({
             {otherArticles.length > 0 && (
               <>
                 <Title level={3} style={{ marginBottom: 24, color: config.colors.text }}>
-                  更多文章
+                  More articles
                 </Title>
                 <Row gutter={[24, 24]}>
                   {otherArticles.map((article) => (
@@ -263,7 +263,7 @@ export default function MagazineBlogListTemplate({
                           >
                             {article.excerpt
                               ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 80) + '...'
-                              : '点击阅读...'}
+                              : 'Read more...'}
                           </Paragraph>
                           <Space size="small" style={{ marginTop: 12 }}>
                             {article.category && (
@@ -273,7 +273,7 @@ export default function MagazineBlogListTemplate({
                             )}
                             {article.publishDate && (
                               <Tag icon={<CalendarOutlined />} color="default" style={{ fontSize: 12 }}>
-                                {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                                {new Date(article.publishDate).toLocaleDateString('en-US')}
                               </Tag>
                             )}
                           </Space>
@@ -299,7 +299,7 @@ export default function MagazineBlogListTemplate({
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
               showSizeChanger={false}
-              showTotal={(total) => `共 ${total} 篇文章`}
+              showTotal={(total) => `${total} articles`}
             />
           </div>
         )}

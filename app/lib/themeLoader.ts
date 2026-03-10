@@ -108,6 +108,11 @@ function getDefaultLayout(slug: string): ThemeConfig['layout'] {
     comprehensive: 'boxed',
     'magazine-multi': 'boxed',
     'minimal-lifestyle': 'boxed',
+    'travel-blog': 'full-width',
+    'modern-magazine': 'sidebar-right',
+    'modern-simple': 'full-width',
+    'lifestyle-daily': 'full-width',
+    'zen-blog': 'full-width',
   }
   return layoutMap[slug] || 'boxed'
 }
@@ -126,6 +131,11 @@ function getDefaultFeatures(slug: string) {
     comprehensive: { showSidebar: false },
     'magazine-multi': { showSidebar: true },
     'minimal-lifestyle': { showSidebar: false },
+    'travel-blog': { showSidebar: false },
+    'modern-magazine': { showSidebar: true },
+    'modern-simple': { showSidebar: false },
+    'lifestyle-daily': { showSidebar: false },
+    'zen-blog': { showSidebar: false },
   }
   return { showSidebar: false, ...featuresMap[slug] }
 }

@@ -30,6 +30,11 @@ const themeBlogListComponents: Record<string, any> = {
   comprehensive: dynamic(() => import('@/themes/comprehensive/BlogListTemplate'), { ssr: true }),
   'magazine-multi': dynamic(() => import('@/themes/magazine-multi/BlogListTemplate'), { ssr: true }),
   'minimal-lifestyle': dynamic(() => import('@/themes/minimal-lifestyle/BlogListTemplate'), { ssr: true }),
+  'travel-blog': dynamic(() => import('@/themes/travel-blog/BlogListTemplate'), { ssr: true }),
+  'modern-magazine': dynamic(() => import('@/themes/modern-magazine/BlogListTemplate'), { ssr: true }),
+  'modern-simple': dynamic(() => import('@/themes/modern-simple/BlogListTemplate'), { ssr: true }),
+  'lifestyle-daily': dynamic(() => import('@/themes/lifestyle-daily/BlogListTemplate'), { ssr: true }),
+  'zen-blog': dynamic(() => import('@/themes/zen-blog/BlogListTemplate'), { ssr: true }),
 }
 
 export default function BlogPageClient() {

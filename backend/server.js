@@ -109,6 +109,24 @@ function saveData() {
 
 loadData();
 
+// ========== English-only guard ==========
+// Reject any CJK (Chinese/Japanese/Korean) characters in user-generated content.
+function containsCJK(input) {
+  if (input == null) return false;
+  const text = Array.isArray(input) ? input.join(' ') : String(input);
+  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text);
+}
+
+function assertEnglishOnly(res, fields) {
+  for (const [key, value] of Object.entries(fields)) {
+    if (containsCJK(value)) {
+      res.status(400).json({ error: `English only: "${key}" contains non-English characters.` });
+      return false;
+    }
+  }
+  return true;
+}
+
 // ========== 文章管理 API ==========
 
 // 获取所有文章（前台展示端用）
@@ -148,6 +166,8 @@ app.get('/api/posts/:id', (req, res) => {
 app.post('/api/posts', (req, res) => {
   const { title, content, excerpt, status, typeId, categoryId, tags, featuredImage, domainIds, customDomains, publishDate, enableKeywordLinks, links, images } = req.body;
   
+  if (!assertEnglishOnly(res, { title, content, excerpt, tags })) return;
+
   const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
   
   const newArticle = {
@@ -186,6 +206,8 @@ app.put('/api/posts/:id', (req, res) => {
   
   const { title, content, excerpt, status, typeId, categoryId, tags, featuredImage, domainIds, customDomains, publishDate, enableKeywordLinks, links, images } = req.body;
   const article = data.articles[index];
+
+  if (!assertEnglishOnly(res, { title, content, excerpt, tags })) return;
   
   if (title) {
     article.title = title;
@@ -238,6 +260,7 @@ app.get('/api/content-types/:id', (req, res) => {
 
 app.post('/api/content-types', (req, res) => {
   const { name, slug, description } = req.body;
+  if (!assertEnglishOnly(res, { name, slug, description })) return;
   const newType = {
     id: uuidv4(),
     name,
@@ -256,6 +279,7 @@ app.put('/api/content-types/:id', (req, res) => {
   }
   
   const { name, slug, description } = req.body;
+  if (!assertEnglishOnly(res, { name, slug, description })) return;
   if (name) data.contentTypes[index].name = name;
   if (slug) data.contentTypes[index].slug = slug;
   if (description !== undefined) data.contentTypes[index].description = description;
@@ -290,6 +314,7 @@ app.get('/api/categories/:id', (req, res) => {
 
 app.post('/api/categories', (req, res) => {
   const { name, slug, description } = req.body;
+  if (!assertEnglishOnly(res, { name, slug, description })) return;
   const newCategory = {
     id: uuidv4(),
     name,
@@ -310,6 +335,7 @@ app.put('/api/categories/:id', (req, res) => {
   }
   
   const { name, slug, description } = req.body;
+  if (!assertEnglishOnly(res, { name, slug, description })) return;
   if (name) data.categories[index].name = name;
   if (slug) data.categories[index].slug = slug;
   if (description !== undefined) data.categories[index].description = description;
@@ -418,7 +444,7 @@ app.post('/api/generate-titles', (req, res) => {
   
   // 模拟AI生成标题（实际应该调用AI服务）
   const category = (data.categories || []).find(c => c.id === categoryId);
-  const domainNames = (domains && domains.length > 0) ? domains.join('、') : '';
+  const domainNames = (domains && domains.length > 0) ? domains.join(', ') : '';
   
   const titles = generateTitles(category, domains, domainNames);
   
@@ -436,67 +462,23 @@ function extractKeywords(text) {
 }
 
 function generateTitles(category, domains, domainNames) {
-  const categoryName = category?.name || '通用';
-  const domainPrefix = domainNames ? `${domainNames}：` : '';
-  
-  // 根据标签类别生成不同风格的标题
-  const categoryTemplates = {
-    '生活': [
-      `${categoryName}小贴士：让每一天更美好`,
-      `探索${categoryName}的乐趣与意义`,
-      `${categoryName}指南：提升生活品质的秘诀`,
-      `发现${categoryName}中的美好瞬间`,
-      `${categoryName}心得分享：实用经验总结`,
-      `如何享受${categoryName}的精彩`,
-      `${categoryName}全攻略：从入门到精通`,
-      `品味${categoryName}的独特魅力`,
-      `${categoryName}技巧：让生活更轻松`,
-      `走进${categoryName}的世界`
-    ],
-    '旅游': [
-      `${categoryName}攻略：必去的10个地方`,
-      `探索${categoryName}的绝美风景`,
-      `${categoryName}指南：完美行程规划`,
-      `发现${categoryName}的隐藏景点`,
-      `${categoryName}体验：难忘的旅程回忆`,
-      `如何规划一次完美的${categoryName}`,
-      `${categoryName}全攻略：从准备到归来`,
-      `品味${categoryName}的独特文化`,
-      `${categoryName}小贴士：省钱又省心`,
-      `走进${categoryName}的精彩世界`
-    ],
-    '科技': [
-      `${categoryName}前沿：最新趋势解析`,
-      `深入理解${categoryName}的核心技术`,
-      `${categoryName}指南：从入门到精通`,
-      `探索${categoryName}的未来发展`,
-      `${categoryName}应用：改变生活的创新`,
-      `如何掌握${categoryName}的关键技能`,
-      `${categoryName}全解析：技术深度剖析`,
-      `发现${categoryName}的无限可能`,
-      `${categoryName}实战：10个实用技巧`,
-      `走进${categoryName}的创新世界`
-    ]
-  };
-  
-  // 根据类别选择模板，如果没有则使用通用模板
-  let templates = categoryTemplates[categoryName] || [
-    `${categoryName}完整指南：从入门到精通`,
-    `深入理解${categoryName}的核心概念`,
-    `${categoryName}的最佳实践与技巧`,
-    `为什么${categoryName}如此重要？`,
-    `${categoryName}实战教程：10个实用技巧`,
-    `掌握${categoryName}的进阶方法`,
-    `${categoryName}完全指南：全面解析`,
-    `探索${categoryName}的奥秘与价值`,
-    `${categoryName}进阶之路：专业提升指南`,
-    `${categoryName}应用指南：从理论到实践`
+  const categoryName = category?.name || 'General';
+
+  const templatesBase = [
+    `${categoryName}: A Practical Guide`,
+    `How to Get Started with ${categoryName}`,
+    `${categoryName} Best Practices (2026 Edition)`,
+    `${categoryName} Tips You Can Use Today`,
+    `${categoryName} Mistakes to Avoid`,
+    `The Complete ${categoryName} Checklist`,
+    `${categoryName} Explained in Simple Terms`,
+    `What’s New in ${categoryName} Right Now`,
+    `${categoryName}: Step-by-Step Strategy`,
+    `${categoryName}: A Proven Framework`,
   ];
-  
-  // 如果有域名，在标题前添加
-  if (domainNames) {
-    templates = templates.map(t => `${domainNames}：${t}`);
-  }
+
+  let templates = templatesBase;
+  if (domainNames) templates = templates.map(t => `${domainNames}: ${t}`);
   
   return templates.map((t, i) => ({
     id: i + 1,
@@ -511,7 +493,7 @@ app.post('/api/generate-article', (req, res) => {
   try {
     const { title, categoryId, domains } = req.body;
     
-    console.log('生成文章请求:', { title, categoryId, domains });
+    console.log('Generate article request:', { title, categoryId, domains });
     
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -519,7 +501,7 @@ app.post('/api/generate-article', (req, res) => {
     
     // 模拟AI生成文章内容（实际应该调用AI服务如OpenAI、Claude等）
     const category = (data.categories || []).find(c => c.id === categoryId);
-    const domainNames = (domains && domains.length > 0) ? domains.join('、') : '通用';
+    const domainNames = (domains && domains.length > 0) ? domains.join(', ') : 'General';
     
     // 生成文章内容
     const articleContent = generateArticleContent(title, category, domainNames);
@@ -533,66 +515,26 @@ app.post('/api/generate-article', (req, res) => {
 });
 
 function generateArticleContent(title, category, domainNames) {
-  const categoryName = category?.name || '通用';
-  
-  // 根据标签类别生成不同风格的内容
-  const categoryContent = {
-    '生活': [
-      `<h2>引言</h2>`,
-      `<p>在${domainNames || '生活'}领域，${title}是我们日常生活中经常遇到的话题。本文将为您分享一些实用的经验和建议，帮助您更好地享受生活的美好。</p>`,
-      `<h2>核心内容</h2>`,
-      `<p>${title}涉及生活的方方面面。无论是日常起居还是休闲娱乐，我们都可以从中发现许多有趣的内容和实用的技巧。</p>`,
-      `<p>通过实践和体验，我们可以更好地理解${title}的真正意义，让生活变得更加丰富多彩。</p>`,
-      `<h2>实用建议</h2>`,
-      `<p>在实践${title}的过程中，有一些小贴士可以帮助您获得更好的体验。这些建议来自实际经验，值得您参考和尝试。</p>`,
-      `<p>同时，我们也需要注意一些细节和注意事项，这样才能真正享受到${title}带来的乐趣。</p>`,
-      `<h2>总结</h2>`,
-      `<p>总的来说，${title}是生活中一个值得关注的话题。通过学习和实践，我们可以让生活变得更加美好和充实。</p>`
-    ],
-    '旅游': [
-      `<h2>引言</h2>`,
-      `<p>${title}是许多旅行爱好者关注的话题。本文将为您提供详细的攻略和建议，帮助您规划一次完美的旅程。</p>`,
-      `<h2>目的地介绍</h2>`,
-      `<p>${title}涉及的目的地有着独特的魅力和特色。无论是自然风光还是人文景观，都值得您亲自去体验和探索。</p>`,
-      `<p>每个地方都有其独特的文化和历史背景，了解这些可以让您的旅行更加有意义。</p>`,
-      `<h2>行程规划</h2>`,
-      `<p>规划${title}的行程时，需要考虑多个因素。合理的行程安排可以让您在有限的时间内体验到更多的精彩内容。</p>`,
-      `<p>建议提前做好功课，了解目的地的天气、交通、住宿等信息，这样可以让旅行更加顺利和愉快。</p>`,
-      `<h2>实用贴士</h2>`,
-      `<p>在${title}的旅程中，有一些实用的建议可以帮助您更好地享受旅行。这些贴士来自实际经验，值得您参考。</p>`,
-      `<h2>总结</h2>`,
-      `<p>总的来说，${title}是一次值得期待的旅程。通过合理的规划和准备，您可以收获一段难忘的旅行回忆。</p>`
-    ],
-    '科技': [
-      `<h2>引言</h2>`,
-      `<p>在科技快速发展的今天，${title}是一个备受关注的话题。本文将为您深入解析这一技术领域，帮助您更好地理解和应用相关知识。</p>`,
-      `<h2>技术概述</h2>`,
-      `<p>${title}涉及的核心技术和概念值得我们深入了解。这些技术不仅改变了我们的生活方式，也为未来的发展奠定了基础。</p>`,
-      `<p>通过系统学习，我们可以掌握${title}的关键要点，并在实际应用中发挥其价值。</p>`,
-      `<h2>应用场景</h2>`,
-      `<p>${title}在实际应用中有着广泛的使用场景。了解这些应用场景可以帮助我们更好地理解技术的价值和意义。</p>`,
-      `<p>从日常生活到专业领域，${title}都在发挥着重要作用，推动着社会的进步和发展。</p>`,
-      `<h2>发展趋势</h2>`,
-      `<p>展望未来，${title}将继续发展和演进。了解这些趋势可以帮助我们把握技术发展的方向。</p>`,
-      `<h2>总结</h2>`,
-      `<p>总的来说，${title}是一个充满潜力的技术领域。通过持续学习和实践，我们可以在这个领域取得更大的成就。</p>`
-    ]
-  };
-  
-  // 根据类别选择内容模板，如果没有则使用通用模板
-  let paragraphs = categoryContent[categoryName] || [
-    `<h2>引言</h2>`,
-    `<p>在${domainNames || categoryName}领域，${title}是一个值得深入探讨的话题。本文将为您全面解析这一主题，帮助您更好地理解和应用相关知识。</p>`,
-    `<h2>核心内容</h2>`,
-    `<p>${title}涉及多个方面的内容。首先，我们需要了解其基本概念和原理。这不仅是理论层面的探讨，更是实践应用的基础。</p>`,
-    `<p>在实际应用中，${title}展现出其独特的价值和意义。通过深入分析，我们可以发现其中的关键要素和重要特征。</p>`,
-    `<h2>实践应用</h2>`,
-    `<p>为了更好地应用${title}，我们需要掌握一些实用的方法和技巧。这些方法经过实践验证，能够帮助您在实际工作中取得更好的效果。</p>`,
-    `<p>同时，我们也需要注意一些常见的误区和挑战。通过了解这些，我们可以避免走弯路，提高工作效率。</p>`,
-    `<h2>总结</h2>`,
-    `<p>总的来说，${title}是一个内容丰富、应用广泛的领域。通过系统学习和实践，我们可以不断提升自己在这一领域的专业能力。</p>`
+  const categoryName = category?.name || 'General';
+
+  const paragraphs = [
+    `<h2>Introduction</h2>`,
+    `<p>${title} is a topic many people are interested in. This article shares practical ideas you can apply right away.</p>`,
+    `<h2>Key points</h2>`,
+    `<p>To understand ${title}, focus on the fundamentals, the common pitfalls, and the repeatable steps that produce consistent results.</p>`,
+    `<h2>Step-by-step approach</h2>`,
+    `<p>${domainNames ? `In ${domainNames}, ` : ''}start with clear goals, pick a simple strategy, and improve it through small iterations. Measure what works and keep what’s effective.</p>`,
+    `<h2>Practical tips</h2>`,
+    `<ul>
+      <li>Define success metrics before you begin.</li>
+      <li>Keep the process simple and repeatable.</li>
+      <li>Document what you learn so you can improve faster.</li>
+    </ul>`,
+    `<h2>Conclusion</h2>`,
+    `<p>${title} is best mastered through practice. Use the checklist above as a starting point, and refine your approach over time.</p>`,
+    `<p><em>Category:</em> ${categoryName}</p>`,
   ];
-  
+
   return paragraphs.join('');
 }
 
@@ -617,7 +559,7 @@ app.post('/api/auto-images', (req, res) => {
         id: uuidv4(),
         url: `https://images.unsplash.com/photo-${Math.random().toString(36).substr(2, 9)}?w=800&h=600&fit=crop`,
         thumbnail: `https://images.unsplash.com/photo-${Math.random().toString(36).substr(2, 9)}?w=400&h=300&fit=crop`,
-        description: `与"${searchTerm}"相关的配图 ${i + 1}`,
+        description: `Image ${i + 1} (${searchTerm})`,
         source: 'Unsplash'
       });
     }

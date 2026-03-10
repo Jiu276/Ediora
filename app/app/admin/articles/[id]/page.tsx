@@ -54,6 +54,8 @@ export default function ArticleEditPage() {
   const isNew = id === 'new'
   
   const [form] = Form.useForm()
+  const watchedFeaturedImage = Form.useWatch('featuredImage', form)
+  const watchedContent = Form.useWatch('content', form)
   const [loading, setLoading] = useState(false)
   const [article, setArticle] = useState<Article | null>(null)
   const [showPublishWizard, setShowPublishWizard] = useState(false)
@@ -572,7 +574,7 @@ export default function ArticleEditPage() {
             rules={[{ required: true, message: '请输入内容' }]}
           >
             <RichTextEditor
-              content={form.getFieldValue('content') || ''}
+              content={watchedContent || ''}
               onChange={(html) => form.setFieldsValue({ content: html })}
             />
           </Form.Item>
@@ -615,12 +617,12 @@ export default function ArticleEditPage() {
           <Form.Item name="featuredImage" label="封面图片">
             <Space orientation="vertical" style={{ width: '100%' }} size="small">
             <ImageUpload
-              value={form.getFieldValue('featuredImage')}
+              value={watchedFeaturedImage}
               onChange={(url) => form.setFieldsValue({ featuredImage: url })}
             />
               <Input
                 placeholder="或直接输入图片 URL"
-                value={form.getFieldValue('featuredImage')}
+                value={watchedFeaturedImage}
                 onChange={(e) => form.setFieldsValue({ featuredImage: e.target.value })}
               />
             </Space>

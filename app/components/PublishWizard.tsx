@@ -140,7 +140,11 @@ export default function PublishWizard({
       const imagesRes = await fetch('/api/auto-images', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: finalTitleText }),
+        body: JSON.stringify({
+          title: finalTitleText,
+          count: 8,
+          context: `${prompt}\n\n${contentData.content || ''}`.trim(),
+        }),
       })
       const imagesData = await imagesRes.json()
       setImages(imagesData.images)

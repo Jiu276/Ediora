@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, Row, Col, Typography, Empty, Skeleton, Pagination, Tag, Space, Input } from 'antd'
 import { CalendarOutlined, FolderOutlined, SearchOutlined, EyeOutlined } from '@ant-design/icons'
@@ -72,7 +72,7 @@ export default function BlogListTemplate({
             <Link href="/blog" style={{ color: config.colors.primary, textDecoration: 'none', fontSize: '15px', fontWeight: 500 }}>Articles</Link>
             <Link href="/archive" style={{ color: config.colors.text, textDecoration: 'none', fontSize: '15px' }}>Archive</Link>
             <Search
-              placeholder="搜索文章..."
+              placeholder="Search articles..."
               onSearch={handleSearch}
               style={{ width: 250 }}
               allowClear
@@ -86,10 +86,10 @@ export default function BlogListTemplate({
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
           <Title level={1} style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 'bold', marginBottom: 16, color: config.colors.text }}>
-            文章列表
+            Articles
           </Title>
           <Paragraph style={{ fontSize: '16px', color: config.colors.subtext }}>
-            浏览所有已发布的文章，发现精彩内容
+            Browse all published articles
           </Paragraph>
         </div>
 
@@ -103,7 +103,7 @@ export default function BlogListTemplate({
             ))}
           </Row>
         ) : articles.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <>
             <Row gutter={[24, 24]}>
@@ -197,10 +197,10 @@ export default function BlogListTemplate({
                         >
                           {article.excerpt
                             ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 80) + '...'
-                            : '点击阅读更多...'}
+                            : 'Read more...'}
                         </Paragraph>
                         <Space size="small" style={{ fontSize: 12, color: config.colors.subtext }}>
-                          <span><CalendarOutlined style={{ marginRight: 4 }} />{article.publishDate ? new Date(article.publishDate).toLocaleDateString('zh-CN') : ''}</span>
+                          <span><CalendarOutlined style={{ marginRight: 4 }} />{article.publishDate ? new Date(article.publishDate).toLocaleDateString('en-US') : ''}</span>
                           {article.viewCount !== undefined && (
                             <span><EyeOutlined style={{ marginRight: 4 }} />{article.viewCount}</span>
                           )}

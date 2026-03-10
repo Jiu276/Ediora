@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, Row, Col, Typography, List, Tag, Empty, Skeleton, Space } from 'antd'
 import { CalendarOutlined, FileTextOutlined } from '@ant-design/icons'
@@ -39,7 +39,7 @@ export default function CardArchiveTemplate({
   config,
 }: ArchiveTemplateProps) {
   const getMonthName = (month: number) => {
-    const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     return months[month - 1]
   }
 
@@ -86,13 +86,13 @@ export default function CardArchiveTemplate({
             </Link>
             <div>
               <Link href="/blog" style={{ marginRight: 24, color: config.colors.text, textDecoration: 'none', fontWeight: 500 }}>
-                文章列表
+                Articles
               </Link>
               <Link href="/archive" style={{ marginRight: 24, color: config.colors.primary, textDecoration: 'none', fontWeight: 500 }}>
-                归档
+                Archive
               </Link>
               <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none' }}>
-                管理
+                Admin
               </Link>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function CardArchiveTemplate({
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <Title level={1} style={{ textAlign: 'center', marginBottom: 48, color: config.colors.text }}>
           <CalendarOutlined style={{ marginRight: 8 }} />
-          文章归档
+          Archive
         </Title>
 
         {/* 年度统计 */}
@@ -118,7 +118,7 @@ export default function CardArchiveTemplate({
             }}
           >
             <Title level={4} style={{ marginBottom: 24, color: config.colors.text }}>
-              年度统计
+              Year in review
             </Title>
             <Row gutter={[20, 20]}>
               {Array.from(yearStats.entries())
@@ -144,7 +144,7 @@ export default function CardArchiveTemplate({
                         {year}
                       </div>
                       <div style={{ color: config.colors.subtext, marginTop: 8, fontSize: 14 }}>
-                        {count} 篇
+                        {count} articles
                       </div>
                     </Card>
                   </Col>
@@ -155,7 +155,7 @@ export default function CardArchiveTemplate({
 
         {/* 归档列表 */}
         {archiveGroups.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <div>
             {archiveGroups.map((group, index) => {
@@ -174,7 +174,7 @@ export default function CardArchiveTemplate({
                         fontWeight: 700,
                       }}
                     >
-                      {group.year} 年
+                      {group.year}
                     </Title>
                   )}
                   <Card
@@ -189,7 +189,7 @@ export default function CardArchiveTemplate({
                       <Space>
                         <CalendarOutlined />
                         <span style={{ color: config.colors.text, fontWeight: 600, fontSize: 16 }}>
-                          {group.year} 年 {getMonthName(group.month)}
+                          {group.year} {getMonthName(group.month)}
                         </span>
                         <Tag
                           color={config.colors.primary}
@@ -200,7 +200,7 @@ export default function CardArchiveTemplate({
                             fontWeight: 500,
                           }}
                         >
-                          {group.articles.length} 篇
+                          {group.articles.length} articles
                         </Tag>
                       </Space>
                     }
@@ -235,7 +235,7 @@ export default function CardArchiveTemplate({
                                 )}
                                 {article.publishDate && (
                                   <span style={{ color: config.colors.subtext, fontSize: '12px' }}>
-                                    {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                                    {new Date(article.publishDate).toLocaleDateString('en-US')}
                                   </span>
                                 )}
                               </Space>

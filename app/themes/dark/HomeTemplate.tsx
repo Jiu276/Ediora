@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Input, Button, Card, Row, Col, Typography, Tag, Space, List, Divider } from 'antd'
@@ -45,7 +45,7 @@ export default function DarkHomeTemplate({ articles, config, searchKeyword = '',
 
   const handleSubscribe = () => {
     // TODO: 实现订阅功能
-    alert('订阅功能待实现')
+    alert('Subscription coming soon')
   }
 
   const filteredArticles = searchKeyword
@@ -207,7 +207,7 @@ export default function DarkHomeTemplate({ articles, config, searchKeyword = '',
             )}
 
             {/* LIFESTYLE Section */}
-            {(articlesByCategory.has('Lifestyle') || articlesByCategory.has('生活')) && (
+            {articlesByCategory.has('Lifestyle') && (
               <section style={{ marginBottom: 60 }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
                   <div style={{ width: 4, height: 24, background: '#ff6b35', marginRight: 12 }} />
@@ -216,7 +216,7 @@ export default function DarkHomeTemplate({ articles, config, searchKeyword = '',
                   </Title>
                 </div>
                 <Row gutter={[16, 16]}>
-                  {(articlesByCategory.get('Lifestyle') || articlesByCategory.get('生活') || filteredArticles.slice(0, 6)).slice(0, 6).map((article) => (
+                  {(articlesByCategory.get('Lifestyle') || filteredArticles.slice(0, 6)).slice(0, 6).map((article) => (
                     <Col xs={24} sm={12} key={article.id}>
                       <Link href={`/blog/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                         <Card
@@ -249,7 +249,7 @@ export default function DarkHomeTemplate({ articles, config, searchKeyword = '',
                             <Paragraph style={{ marginBottom: 16, color: '#999', fontSize: 13, lineHeight: 1.6, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                               {article.excerpt
                                 ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
-                                : '点击阅读更多...'}
+                                : 'Read more...'}
                             </Paragraph>
                             <Space size="small" style={{ fontSize: 12, color: '#999' }}>
                               <span><UserOutlined /> {article.author}</span>
@@ -268,7 +268,7 @@ export default function DarkHomeTemplate({ articles, config, searchKeyword = '',
 
             {/* Category Sections */}
             {Array.from(articlesByCategory.entries()).slice(0, 3).map(([category, categoryArticles]) => {
-              if (category === 'Lifestyle' || category === '生活') return null
+              if (category === 'Lifestyle') return null
               return (
                 <section key={category} style={{ marginBottom: 60 }}>
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
@@ -307,7 +307,7 @@ export default function DarkHomeTemplate({ articles, config, searchKeyword = '',
                               <Paragraph style={{ marginBottom: 16, color: '#999', fontSize: 14, lineHeight: 1.6 }}>
                                 {categoryArticles[0].excerpt
                                   ? categoryArticles[0].excerpt.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
-                                  : '点击阅读更多...'}
+                                  : 'Read more...'}
                               </Paragraph>
                               <Space size="small" style={{ fontSize: 12, color: '#999' }}>
                                 <span><UserOutlined /> {categoryArticles[0].author}</span>

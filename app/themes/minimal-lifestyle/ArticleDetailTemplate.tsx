@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -119,7 +119,7 @@ export default function ArticleDetailTemplate({
                 <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(article.publishDate).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               )}
               {article.viewCount !== undefined && (
-                <span><EyeOutlined style={{ marginRight: 4 }} />{article.viewCount} 次阅读</span>
+                <span><EyeOutlined style={{ marginRight: 4 }} />{article.viewCount} views</span>
               )}
               {article.category && (
                 <Tag icon={<FolderOutlined />} color={config.colors.primary} style={{ fontSize: 12 }}>
@@ -181,7 +181,7 @@ export default function ArticleDetailTemplate({
           <Divider style={{ margin: '40px 0' }} />
           <div style={{ marginBottom: 40 }}>
             <Typography.Text strong style={{ color: config.colors.text, marginRight: 16, fontSize: 16 }}>
-              分享文章：
+              Share
             </Typography.Text>
             <ShareButtons
               title={article.title}
@@ -196,7 +196,7 @@ export default function ArticleDetailTemplate({
         {relatedArticles.length > 0 && (
           <section style={{ marginTop: 60, paddingTop: 40, borderTop: `1px solid ${config.colors.border}` }}>
             <Title level={3} style={{ marginBottom: 32, fontSize: 28, fontWeight: 'bold', color: config.colors.text }}>
-              相关文章
+              Related articles
             </Title>
             <Row gutter={[24, 24]}>
               {relatedArticles.map((related) => (
@@ -239,7 +239,7 @@ export default function ArticleDetailTemplate({
                       </Title>
                       {related.publishDate && (
                         <div style={{ fontSize: 12, color: config.colors.subtext }}>
-                          {new Date(related.publishDate).toLocaleDateString('zh-CN')}
+                          {new Date(related.publishDate).toLocaleDateString('en-US')}
                         </div>
                       )}
                     </Card>

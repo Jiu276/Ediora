@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Typography, Space, Tag, Input } from 'antd'
 import { SearchOutlined, CalendarOutlined } from '@ant-design/icons'
@@ -58,18 +58,18 @@ export default function MinimalHomeTemplate({ articles, config, searchKeyword = 
                 letterSpacing: '2px',
               }}
             >
-              我的博客
+              My Blog
             </Title>
           </Link>
           <Paragraph style={{ color: config.colors.subtext, fontSize: 14, margin: 0 }}>
-            极简 · 专注 · 思考
+            Minimal · Focus · Think
           </Paragraph>
         </header>
 
         {/* 搜索框 */}
         <div style={{ marginBottom: 60, textAlign: 'center' }}>
           <Search
-            placeholder="搜索..."
+            placeholder="Search..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -119,7 +119,7 @@ export default function MinimalHomeTemplate({ articles, config, searchKeyword = 
                     {article.publishDate && (
                       <span>
                         <CalendarOutlined style={{ marginRight: 4 }} />
-                        {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                        {new Date(article.publishDate).toLocaleDateString('en-US')}
                       </span>
                     )}
                     {article.category && (
@@ -135,7 +135,7 @@ export default function MinimalHomeTemplate({ articles, config, searchKeyword = 
         ) : (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
             <Paragraph style={{ color: config.colors.subtext, fontSize: 16 }}>
-              {searchKeyword ? '未找到相关文章' : '暂无文章'}
+              {searchKeyword ? 'No matching articles' : 'No articles yet'}
             </Paragraph>
           </div>
         )}
@@ -143,7 +143,7 @@ export default function MinimalHomeTemplate({ articles, config, searchKeyword = 
         {/* 极简页脚 */}
         <footer style={{ marginTop: 100, textAlign: 'center', paddingTop: 40, borderTop: `1px solid ${config.colors.border}` }}>
           <Text style={{ color: config.colors.subtext, fontSize: 12 }}>
-            © {new Date().getFullYear()} 我的博客
+            © {new Date().getFullYear()} My Blog
           </Text>
         </footer>
       </div>

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, Row, Col, Typography, Empty, Skeleton, Pagination, Tag, Space } from 'antd'
 import { CalendarOutlined, FolderOutlined } from '@ant-design/icons'
@@ -62,13 +62,13 @@ export default function CardBlogListTemplate({
             </Link>
             <div>
               <Link href="/blog" style={{ marginRight: 24, color: config.colors.text, textDecoration: 'none', fontWeight: 500 }}>
-                文章列表
+                Articles
               </Link>
               <Link href="/archive" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none' }}>
-                归档
+                Archive
               </Link>
               <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none' }}>
-                管理
+                Admin
               </Link>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function CardBlogListTemplate({
       {/* 主内容区 */}
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <Title level={1} style={{ textAlign: 'center', marginBottom: 48, color: config.colors.text }}>
-          文章列表
+          Articles
         </Title>
 
         {loading ? (
@@ -93,7 +93,7 @@ export default function CardBlogListTemplate({
             ))}
           </Row>
         ) : articles.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <Row gutter={[32, 32]}>
             {articles.map((article) => (
@@ -168,7 +168,7 @@ export default function CardBlogListTemplate({
                               color: config.colors.subtext,
                             }}
                           >
-                            {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                            {new Date(article.publishDate).toLocaleDateString('en-US')}
                           </Tag>
                         )}
                       </Space>
@@ -205,7 +205,7 @@ export default function CardBlogListTemplate({
                       >
                         {article.excerpt
                           ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
-                          : '点击阅读完整文章，获取更多精彩内容...'}
+                          : 'Read more...'}
                       </Paragraph>
                     </div>
                   </Card>
@@ -227,7 +227,7 @@ export default function CardBlogListTemplate({
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
               showSizeChanger={false}
-              showTotal={(total) => `共 ${total} 篇文章`}
+              showTotal={(total) => `${total} articles`}
             />
           </div>
         )}

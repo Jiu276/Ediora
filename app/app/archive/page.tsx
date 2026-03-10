@@ -33,6 +33,11 @@ const themeArchiveComponents: Record<string, any> = {
   comprehensive: dynamic(() => import('@/themes/comprehensive/ArchiveTemplate'), { ssr: true }),
   'magazine-multi': dynamic(() => import('@/themes/magazine-multi/ArchiveTemplate'), { ssr: true }),
   'minimal-lifestyle': dynamic(() => import('@/themes/minimal-lifestyle/ArchiveTemplate'), { ssr: true }),
+  'travel-blog': dynamic(() => import('@/themes/travel-blog/ArchiveTemplate'), { ssr: true }),
+  'modern-magazine': dynamic(() => import('@/themes/modern-magazine/ArchiveTemplate'), { ssr: true }),
+  'modern-simple': dynamic(() => import('@/themes/modern-simple/ArchiveTemplate'), { ssr: true }),
+  'lifestyle-daily': dynamic(() => import('@/themes/lifestyle-daily/ArchiveTemplate'), { ssr: true }),
+  'zen-blog': dynamic(() => import('@/themes/zen-blog/ArchiveTemplate'), { ssr: true }),
 }
 
 export default function ArchivePage() {

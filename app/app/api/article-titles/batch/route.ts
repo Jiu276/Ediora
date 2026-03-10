@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+function containsCJK(input: unknown) {
+  if (input == null) return false
+  const text = String(input)
+  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text)
+}
+
 // POST /api/article-titles/batch - 批量保存生成的标题到数据库
 export async function POST(request: NextRequest) {
   try {
@@ -58,6 +64,14 @@ export async function POST(request: NextRequest) {
 
     for (const titleData of titles) {
       try {
+        if (containsCJK(titleData?.title) || containsCJK(titleData?.description)) {
+          errors.push({
+            title: titleData?.title,
+            error: 'Title/description must be English only (no Chinese characters).',
+          })
+          continue
+        }
+
         const slug = await generateUniqueSlug(titleData.title)
 
         // 再次检查是否存在（防止并发冲突）
@@ -77,7 +91,7 @@ export async function POST(request: NextRequest) {
           data: {
             name: titleData.title,
             slug,
-            description: titleData.description || `推荐度: ${titleData.score}%`,
+            description: titleData.description || `Relevance: ${titleData.score}%`,
           },
         })
 

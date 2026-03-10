@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Typography, List, Tag, Empty, Skeleton, Space } from 'antd'
 import { CalendarOutlined, FileTextOutlined } from '@ant-design/icons'
@@ -39,7 +39,7 @@ export default function MinimalArchiveTemplate({
   config,
 }: ArchiveTemplateProps) {
   const getMonthName = (month: number) => {
-    const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     return months[month - 1]
   }
 
@@ -68,18 +68,18 @@ export default function MinimalArchiveTemplate({
                 letterSpacing: '2px',
               }}
             >
-              文章归档
+              Archive
             </Title>
           </Link>
           <div style={{ marginTop: 20 }}>
             <Link href="/blog" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none', fontSize: 14 }}>
-              文章列表
+              Articles
             </Link>
             <Link href="/archive" style={{ marginRight: 24, color: config.colors.primary, textDecoration: 'none', fontSize: 14 }}>
-              归档
+              Archive
             </Link>
             <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none', fontSize: 14 }}>
-              管理后台
+              Admin
             </Link>
           </div>
         </header>
@@ -88,7 +88,7 @@ export default function MinimalArchiveTemplate({
         {yearStats.size > 0 && (
           <div style={{ marginBottom: 60, borderBottom: `1px solid ${config.colors.border}`, paddingBottom: 40 }}>
             <Title level={4} style={{ marginBottom: 24, color: config.colors.text, fontSize: 18 }}>
-              年度统计
+              Year in review
             </Title>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
               {Array.from(yearStats.entries())
@@ -113,7 +113,7 @@ export default function MinimalArchiveTemplate({
                       {year}
                     </div>
                     <div style={{ color: config.colors.subtext, fontSize: 14, marginTop: 4 }}>
-                      {count} 篇
+                      {count} articles
                     </div>
                   </div>
                 ))}
@@ -123,7 +123,7 @@ export default function MinimalArchiveTemplate({
 
         {/* 归档列表 */}
         {archiveGroups.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <div>
             {archiveGroups.map((group, index) => {
@@ -142,7 +142,7 @@ export default function MinimalArchiveTemplate({
                         fontSize: 32,
                       }}
                     >
-                      {group.year} 年
+                      {group.year}
                     </Title>
                   )}
                   <div
@@ -154,7 +154,7 @@ export default function MinimalArchiveTemplate({
                   >
                     <div style={{ marginBottom: 20, color: config.colors.text, fontSize: 18 }}>
                       <CalendarOutlined style={{ marginRight: 8 }} />
-                      {group.year} 年 {getMonthName(group.month)} · {group.articles.length} 篇
+                      {group.year} {getMonthName(group.month)} · {group.articles.length} articles
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                       {group.articles.map((article) => (
@@ -186,7 +186,7 @@ export default function MinimalArchiveTemplate({
                                   </Tag>
                                 )}
                                 {article.publishDate && (
-                                  <span>{new Date(article.publishDate).toLocaleDateString('zh-CN')}</span>
+                                  <span>{new Date(article.publishDate).toLocaleDateString('en-US')}</span>
                                 )}
                               </Space>
                             </div>

@@ -7,6 +7,12 @@ import {
 } from '@/lib/seo'
 import { generateSlug } from '@/lib/slug'
 
+function containsCJK(input: unknown) {
+  if (input == null) return false
+  const text = String(input)
+  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text)
+}
+
 // GET /api/articles/[id] - 获取单个文章
 export async function GET(
   request: NextRequest,
@@ -61,6 +67,21 @@ export async function PUT(
       createVersion: _createVersion = false, // 版本快照功能暂不使用
     } = body
 
+    // English-only guard for future edits.
+    if (
+      containsCJK(title) ||
+      containsCJK(content) ||
+      containsCJK(excerpt) ||
+      containsCJK(metaTitle) ||
+      containsCJK(metaDescription) ||
+      containsCJK(metaKeywords)
+    ) {
+      return NextResponse.json(
+        { error: '内容必须为英文（不可包含中文字符）' },
+        { status: 400 }
+      )
+    }
+
     // 读取当前文章，供后续自动补全字段使用
     const currentArticle = await prisma.article.findFirst({
       where: { id: params.id, deletedAt: null },
@@ -74,9 +95,11 @@ export async function PUT(
     if (title) {
       let baseSlug = generateSlug(title)
       
-      // 如果生成的 slug 为空，使用 ID 作为后备
       if (!baseSlug || baseSlug.trim() === '') {
-        baseSlug = params.id.substring(0, 36)
+        return NextResponse.json(
+          { error: '标题必须为英文（无法生成 slug）' },
+          { status: 400 }
+        )
       }
       
       let newSlug = baseSlug
@@ -125,6 +148,12 @@ export async function PUT(
       const category = await prisma.category.findFirst({
         where: { id: finalCategoryId, deletedAt: null },
       })
+      if (category?.name && containsCJK(category.name)) {
+        return NextResponse.json(
+          { error: '标签类别必须为英文（请先创建英文标签）' },
+          { status: 400 }
+        )
+      }
       categoryName = category?.name || null
     }
     

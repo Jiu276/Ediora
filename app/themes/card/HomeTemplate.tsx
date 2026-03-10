@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, Col, Row, Space, Tag, Typography, Input, Button } from 'antd'
 import { SearchOutlined, CalendarOutlined, FolderOutlined } from '@ant-design/icons'
@@ -63,13 +63,13 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
             <Col>
               <Link href="/" style={{ textDecoration: 'none' }}>
                 <Title level={2} style={{ margin: 0, color: config.colors.primary, fontWeight: 700 }}>
-                  我的博客
+                  My Blog
                 </Title>
               </Link>
             </Col>
             <Col flex="auto" style={{ maxWidth: 500, margin: '0 24px' }}>
               <Search
-                placeholder="搜索文章..."
+                placeholder="Search articles..."
                 allowClear
                 enterButton={<SearchOutlined />}
                 size="large"
@@ -83,10 +83,10 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
             <Col>
               <Space>
                 <Button type="link" href="/blog" style={{ color: config.colors.text, fontWeight: 500 }}>
-                  所有文章
+                  All articles
                 </Button>
                 <Button type="link" href="/admin" style={{ color: config.colors.text }}>
-                  管理
+                  Admin
                 </Button>
               </Space>
             </Col>
@@ -98,10 +98,10 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
         {/* 欢迎区域 */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <Title level={1} style={{ marginBottom: 16, color: config.colors.text }}>
-            欢迎来到我的博客
+            Welcome to my blog
           </Title>
           <Paragraph style={{ fontSize: 18, color: config.colors.subtext, maxWidth: 600, margin: '0 auto' }}>
-            发现精彩内容，探索无限可能
+            Discover more
           </Paragraph>
         </div>
 
@@ -183,7 +183,7 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
                               color: config.colors.subtext,
                             }}
                           >
-                            {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                            {new Date(article.publishDate).toLocaleDateString('en-US')}
                           </Tag>
                         )}
                       </Space>
@@ -220,7 +220,7 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
                       >
                         {article.excerpt
                           ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
-                          : '点击阅读完整文章，获取更多精彩内容...'}
+                          : 'Read more...'}
                       </Paragraph>
                     </div>
                   </Card>
@@ -231,7 +231,7 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
         ) : (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
             <Title level={3} style={{ color: config.colors.subtext }}>
-              {searchKeyword ? '未找到相关文章' : '暂无文章'}
+              {searchKeyword ? 'No matching articles' : 'No articles yet'}
             </Title>
             <Paragraph style={{ color: config.colors.subtext }}>
               {searchKeyword ? '请尝试其他关键词' : '快去发布第一篇文章吧！'}
@@ -252,7 +252,7 @@ export default function CardHomeTemplate({ articles, config, searchKeyword = '',
       >
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px', textAlign: 'center' }}>
           <Paragraph style={{ color: config.colors.subtext, margin: 0, fontSize: 15 }}>
-            © {new Date().getFullYear()} 我的博客 · 用心记录生活
+            © {new Date().getFullYear()} My Blog
           </Paragraph>
         </div>
       </footer>

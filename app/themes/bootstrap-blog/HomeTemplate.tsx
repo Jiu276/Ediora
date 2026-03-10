@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { Input, Button } from 'antd'
@@ -44,7 +44,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
 
   const handleSubscribe = () => {
     // TODO: 实现订阅功能
-    alert('订阅功能待实现')
+    alert('Subscription coming soon')
   }
 
   const filteredArticles = searchKeyword
@@ -178,12 +178,12 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                       <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#666', marginBottom: 16, minHeight: 60 }}>
                         {article.excerpt
                           ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 120) + '...'
-                          : '点击阅读更多...'}
+                          : 'Read more...'}
                       </p>
                       <div style={{ display: 'flex', gap: 16, fontSize: '12px', color: '#999' }}>
                         <span><UserOutlined style={{ marginRight: 4 }} />{article.author}</span>
                         {article.publishDate && (
-                          <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(article.publishDate).toLocaleDateString('zh-CN')}</span>
+                          <span><CalendarOutlined style={{ marginRight: 4 }} />{new Date(article.publishDate).toLocaleDateString('en-US')}</span>
                         )}
                         {article.viewCount !== undefined && (
                           <span><MessageOutlined style={{ marginRight: 4 }} />{article.viewCount}</span>
@@ -273,7 +273,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                     <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#666' }}>
                       {article.excerpt
                         ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
-                        : '点击阅读更多...'}
+                        : 'Read more...'}
                     </p>
                   </Link>
                 </article>
@@ -373,7 +373,7 @@ export default function HomeTemplate({ articles, config, searchKeyword = '', onS
                       </div>
                       {article.publishDate && (
                         <div style={{ fontSize: '12px', color: '#666' }}>
-                          {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                          {new Date(article.publishDate).toLocaleDateString('en-US')}
                         </div>
                       )}
                     </div>

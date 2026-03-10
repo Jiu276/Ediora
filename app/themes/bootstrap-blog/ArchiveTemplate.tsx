@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Typography, List, Tag, Empty, Skeleton, Space } from 'antd'
 import { CalendarOutlined, FileTextOutlined } from '@ant-design/icons'
@@ -62,17 +62,17 @@ export default function ArchiveTemplate({ loading, archiveGroups, yearStats, con
       <main style={{ maxWidth: 900, margin: '0 auto', padding: '80px 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
           <Title level={1} style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: 16, color: '#000' }}>
-            文章归档
+            Archive
           </Title>
           <p style={{ fontSize: '16px', color: '#666' }}>
-            按时间顺序浏览所有文章
+            Browse all articles by date
           </p>
         </div>
 
         {loading ? (
           <Skeleton active paragraph={{ rows: 10 }} />
         ) : archiveGroups.length === 0 ? (
-          <Empty description="暂无文章" />
+          <Empty description="No articles yet" />
         ) : (
           <div>
             {(() => {
@@ -100,7 +100,7 @@ export default function ArchiveTemplate({ loading, archiveGroups, yearStats, con
                         borderBottom: '2px solid #e5e7eb',
                       }}
                     >
-                      {year} 年 ({yearStats.get(year) || 0} 篇)
+                      {year} ({yearStats.get(year) || 0} articles)
                     </Title>
 
                     {groups
@@ -116,7 +116,7 @@ export default function ArchiveTemplate({ loading, archiveGroups, yearStats, con
                               color: '#333',
                             }}
                           >
-                            {monthGroup.month} 月 ({monthGroup.articles.length} 篇)
+                            {new Date(2000, monthGroup.month - 1).toLocaleString('en-US', { month: 'long' })} ({monthGroup.articles.length} articles)
                           </Title>
 
                           <List
@@ -152,7 +152,7 @@ export default function ArchiveTemplate({ loading, archiveGroups, yearStats, con
                                       {article.publishDate && (
                                         <span>
                                           <CalendarOutlined style={{ marginRight: 4 }} />
-                                          {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                                          {new Date(article.publishDate).toLocaleDateString('en-US')}
                                         </span>
                                       )}
                                       {article.category && (

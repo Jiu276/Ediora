@@ -33,9 +33,9 @@ export async function GET(request: NextRequest) {
                 type: 'title',
                 data: {
                   index: idx + 1,
-                  title: `${t.title_zh} | ${t.title_en}`,
-                  title_zh: t.title_zh,
-                  title_en: t.title_en,
+                  title: t.title_en || '',
+                  title_zh: t.title_zh || '',
+                  title_en: t.title_en || '',
                   score: t.score,
                 },
               })}\n\n`

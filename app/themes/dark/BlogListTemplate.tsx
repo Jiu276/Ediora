@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Card, Row, Col, Typography, Empty, Skeleton, Pagination, Tag, Space } from 'antd'
 import { CalendarOutlined, FolderOutlined, MoonOutlined } from '@ant-design/icons'
@@ -67,13 +67,13 @@ export default function DarkBlogListTemplate({
             </Link>
             <div>
               <Link href="/blog" style={{ marginRight: 24, color: config.colors.text, textDecoration: 'none' }}>
-                文章列表
+                Articles
               </Link>
               <Link href="/archive" style={{ marginRight: 24, color: config.colors.subtext, textDecoration: 'none' }}>
-                归档
+                Archive
               </Link>
               <Link href="/admin" style={{ color: config.colors.subtext, textDecoration: 'none' }}>
-                管理后台
+                Admin
               </Link>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function DarkBlogListTemplate({
       {/* 主内容区 */}
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
         <Title level={1} style={{ textAlign: 'center', marginBottom: 48, color: config.colors.text }}>
-          文章列表
+          Articles
         </Title>
 
         {loading ? (
@@ -98,7 +98,7 @@ export default function DarkBlogListTemplate({
             ))}
           </Row>
         ) : articles.length === 0 ? (
-          <Empty description="暂无已发布的文章" />
+          <Empty description="No published articles yet" />
         ) : (
           <Row gutter={[24, 24]}>
             {articles.map((article) => (
@@ -172,7 +172,7 @@ export default function DarkBlogListTemplate({
                     >
                       {article.excerpt
                         ? article.excerpt.replace(/<[^>]*>/g, '').substring(0, 120) + '...'
-                        : '点击阅读完整文章...'}
+                        : 'Read full article...'}
                     </Paragraph>
                     <Space size="small" style={{ marginTop: 16 }}>
                       {article.category && (
@@ -197,7 +197,7 @@ export default function DarkBlogListTemplate({
                             color: config.colors.subtext,
                           }}
                         >
-                          {new Date(article.publishDate).toLocaleDateString('zh-CN')}
+                          {new Date(article.publishDate).toLocaleDateString('en-US')}
                         </Tag>
                       )}
                     </Space>
@@ -220,7 +220,7 @@ export default function DarkBlogListTemplate({
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
               showSizeChanger={false}
-              showTotal={(total) => `共 ${total} 篇文章`}
+              showTotal={(total) => `${total} articles`}
             />
           </div>
         )}
