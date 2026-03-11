@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Typography, Empty, Skeleton, Pagination, Tag, Space, Row, Col, Card, Button } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
@@ -6,7 +6,7 @@ import Link from 'next/link'
 import LazyImage from '@/components/LazyImage'
 import type { ThemeConfig } from '@/lib/themeLoader'
 
-const { Title, Paragraph } = Typography
+const { Title, Paragraph, Text } = Typography
 
 interface Article {
   id: string
@@ -101,7 +101,7 @@ export default function ModernSimpleBlogListTemplate({
                       article.featuredImage ? (
                         <LazyImage src={article.featuredImage} alt={article.title} style={{ width: '100%', height: 200, objectFit: 'cover' }} />
                       ) : (
-                        <div style={{ height: 200, background: config.colors.cardAltBackground }} />
+                        <div style={{ height: 200, background: config.colors.cardBackground }} />
                       )
                     }
                     onClick={() => window.location.href = `/blog/${article.id}`}

@@ -59,7 +59,7 @@ export default function RichTextEditor({
     const current = editor.getHTML()
     const next = content || ''
     if (current !== next) {
-      editor.commands.setContent(next, false)
+      editor.commands.setContent(next, { emitUpdate: false })
     }
   }, [content, editor])
 

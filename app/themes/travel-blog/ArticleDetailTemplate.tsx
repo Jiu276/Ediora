@@ -228,7 +228,7 @@ export default function TravelBlogArticleDetailTemplate({
                           style={{ width: '100%', height: 200, objectFit: 'cover' }}
                         />
                       ) : (
-                        <div style={{ height: 200, background: config.colors.cardAltBackground }} />
+                        <div style={{ height: 200, background: config.colors.cardBackground }} />
                       )
                     }
                     onClick={() => window.location.href = `/blog/${related.id}`}

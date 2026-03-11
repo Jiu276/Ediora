@@ -149,7 +149,7 @@ export default function TravelBlogHomeTemplate({ articles, config, searchKeyword
                           </div>
                         </div>
                       ) : (
-                        <div style={{ height: 300, background: config.colors.cardAltBackground, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ height: 300, background: config.colors.cardBackground, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <Text style={{ color: config.colors.subtext }}>No Image</Text>
                         </div>
                       )
@@ -227,7 +227,7 @@ export default function TravelBlogHomeTemplate({ articles, config, searchKeyword
                               style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: 4 }}
                             />
                           ) : (
-                            <div style={{ width: '100%', height: 200, background: config.colors.cardAltBackground, borderRadius: 4 }} />
+                            <div style={{ width: '100%', height: 200, background: config.colors.cardBackground, borderRadius: 4 }} />
                           )}
                         </Col>
                         <Col xs={24} sm={16}>
@@ -270,19 +270,19 @@ export default function TravelBlogHomeTemplate({ articles, config, searchKeyword
                     <Title level={4} style={{ marginBottom: 16 }}>Travel Essentials</Title>
                     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 40, height: 40, background: config.colors.cardAltBackground, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 40, height: 40, background: config.colors.cardBackground, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           🎒
                         </div>
                         <Text>Backpack</Text>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 40, height: 40, background: config.colors.cardAltBackground, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 40, height: 40, background: config.colors.cardBackground, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           📷
                         </div>
                         <Text>Camera</Text>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 40, height: 40, background: config.colors.cardAltBackground, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 40, height: 40, background: config.colors.cardBackground, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           🕶️
                         </div>
                         <Text>Sunglasses</Text>

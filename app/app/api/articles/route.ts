@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
     }
     
     // 生成基础 slug（英文站点：禁止中文标题）
-    let baseSlug = generateSlug(title)
+    const baseSlug = generateSlug(title)
     
     if (!baseSlug || baseSlug.trim() === '') {
       return NextResponse.json(

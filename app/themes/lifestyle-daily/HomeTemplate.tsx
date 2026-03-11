@@ -272,7 +272,7 @@ export default function LifestyleDailyHomeTemplate({ articles, config, searchKey
                     width: 100, 
                     height: 100, 
                     borderRadius: '50%', 
-                    background: config.colors.cardAltBackground,
+                    background: config.colors.cardBackground,
                     margin: '0 auto 16px',
                     display: 'flex',
                     alignItems: 'center',
@@ -328,7 +328,7 @@ export default function LifestyleDailyHomeTemplate({ articles, config, searchKey
                             style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4, flexShrink: 0 }}
                           />
                         ) : (
-                          <div style={{ width: 80, height: 80, background: config.colors.cardAltBackground, borderRadius: 4, flexShrink: 0 }} />
+                          <div style={{ width: 80, height: 80, background: config.colors.cardBackground, borderRadius: 4, flexShrink: 0 }} />
                         )}
                         <div style={{ flex: 1 }}>
                           <Paragraph 
@@ -354,7 +354,7 @@ export default function LifestyleDailyHomeTemplate({ articles, config, searchKey
       </main>
 
       {/* Footer */}
-      <footer style={{ background: config.colors.cardAltBackground, padding: '40px 24px', marginTop: 60, borderTop: `1px solid ${config.colors.border}` }}>
+      <footer style={{ background: config.colors.cardBackground, padding: '40px 24px', marginTop: 60, borderTop: `1px solid ${config.colors.border}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 24 }}>
             {['Facebook', 'Twitter', 'Instagram', 'Pinterest'].map((social) => (

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Typography, Space, Tag, Input, Row, Col, Card, Button } from 'antd'
 import { SearchOutlined, CalendarOutlined } from '@ant-design/icons'
@@ -146,7 +146,7 @@ export default function ModernSimpleHomeTemplate({ articles, config, searchKeywo
                             style={{ width: '100%', height: 180, objectFit: 'cover' }}
                           />
                         ) : (
-                          <div style={{ height: 180, background: config.colors.cardAltBackground }} />
+                          <div style={{ height: 180, background: config.colors.cardBackground }} />
                         )
                       }
                       onClick={() => window.location.href = `/blog/${article.id}`}
@@ -196,7 +196,7 @@ export default function ModernSimpleHomeTemplate({ articles, config, searchKeywo
                             style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4 }}
                           />
                         ) : (
-                          <div style={{ width: 80, height: 80, background: config.colors.cardAltBackground, borderRadius: 4 }} />
+                          <div style={{ width: 80, height: 80, background: config.colors.cardBackground, borderRadius: 4 }} />
                         )}
                       </div>
                       <div style={{ flex: 1 }}>

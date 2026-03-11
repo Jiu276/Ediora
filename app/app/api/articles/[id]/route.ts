@@ -93,7 +93,7 @@ export async function PUT(
     // 如果标题改变，更新 slug（确保唯一性）
     const slugUpdate: { slug?: string } = {}
     if (title) {
-      let baseSlug = generateSlug(title)
+      const baseSlug = generateSlug(title)
       
       if (!baseSlug || baseSlug.trim() === '') {
         return NextResponse.json(

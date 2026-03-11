@@ -157,7 +157,7 @@ export default function ModernMagazineHomeTemplate({ articles, config, searchKey
                       </div>
                     </div>
                   ) : (
-                    <div style={{ height: 400, background: config.colors.cardAltBackground }} />
+                    <div style={{ height: 400, background: config.colors.cardBackground }} />
                   )
                 }
               />
@@ -182,7 +182,7 @@ export default function ModernMagazineHomeTemplate({ articles, config, searchKey
                             style={{ width: '100%', height: 180, objectFit: 'cover' }}
                           />
                         ) : (
-                          <div style={{ height: 180, background: config.colors.cardAltBackground }} />
+                          <div style={{ height: 180, background: config.colors.cardBackground }} />
                         )
                       }
                       onClick={() => window.location.href = `/blog/${article.id}`}
@@ -290,7 +290,7 @@ export default function ModernMagazineHomeTemplate({ articles, config, searchKey
                                 style={{ width: '100%', height: 60, objectFit: 'cover', borderRadius: 4 }}
                               />
                             ) : (
-                              <div style={{ width: '100%', height: 60, background: config.colors.cardAltBackground, borderRadius: 4 }} />
+                              <div style={{ width: '100%', height: 60, background: config.colors.cardBackground, borderRadius: 4 }} />
                             )}
                           </Col>
                           <Col span={16}>
@@ -312,7 +312,7 @@ export default function ModernMagazineHomeTemplate({ articles, config, searchKey
               </Card>
 
               {/* Newsletter */}
-              <Card style={{ marginBottom: 24, borderRadius: 0, background: config.colors.cardAltBackground }}>
+              <Card style={{ marginBottom: 24, borderRadius: 0, background: config.colors.cardBackground }}>
                 <div style={{ textAlign: 'center' }}>
                   <MailOutlined style={{ fontSize: 32, color: config.colors.primary, marginBottom: 12 }} />
                   <Title level={4} style={{ marginBottom: 8 }}>Newsletter</Title>

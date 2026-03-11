@@ -24,7 +24,12 @@ export async function POST(request: NextRequest) {
     const keywords = extractKeywords(combinedText)
     const titlePart =
       keywords.slice(0, 4).join(' ') ||
-      title.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length > 1).slice(0, 4).join(' ') ||
+      title
+        .replace(/[^a-zA-Z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter((w: string) => w.length > 1)
+        .slice(0, 4)
+        .join(' ') ||
       ''
     const bias = chooseBias(combinedText)
     const query = titlePart ? `${titlePart} ${bias}`.trim() : bias
@@ -83,7 +88,7 @@ function extractKeywords(input: string): string[] {
     .filter(word => word.length > 2 && !stopWords.includes(word))
   
   // 去重并限制数量
-  const uniqueWords = [...new Set(words)].slice(0, 10)
+  const uniqueWords = Array.from(new Set(words)).slice(0, 10)
   
   // 如果没有提取到关键词，使用默认（偏服饰/生活方式，避免风景图）
   if (uniqueWords.length === 0) {

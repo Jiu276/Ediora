@@ -198,7 +198,7 @@ export default function ArticleDetailTemplate({
             </Typography.Text>
             <ShareButtons
               title={article.title}
-              url={`/blog/${article.id}`}
+              url={`/blog/${(article as any).slug || article.id}`}
               description={article.excerpt || undefined}
               image={article.featuredImage || undefined}
             />
@@ -278,7 +278,7 @@ export default function ArticleDetailTemplate({
                         </div>
                       )
                     }
-                    onClick={() => router.push(`/blog/${related.id}`)}
+                    onClick={() => router.push(`/blog/${related.slug || related.id}`)}
                     style={{ cursor: 'pointer', height: '100%', background: config.colors.cardBackground, borderColor: config.colors.border }}
                   >
                     <Card.Meta
