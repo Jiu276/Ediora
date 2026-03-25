@@ -21,6 +21,7 @@ function PublishWizard({ article, onComplete, onCancel }) {
   const [enableKeywordLinks, setEnableKeywordLinks] = useState(article.enableKeywordLinks || false);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [useTemplateFallback, setUseTemplateFallback] = useState(false);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -128,7 +129,8 @@ function PublishWizard({ article, onComplete, onCancel }) {
         body: JSON.stringify({
           title: finalTitle,
           categoryId: selectedCategoryId,
-          domains: customDomains
+          domains: customDomains,
+          forceFallback: useTemplateFallback
         }),
         signal: contentController.signal
       });
@@ -476,6 +478,18 @@ function PublishWizard({ article, onComplete, onCancel }) {
                 value={publishDate}
                 onChange={(e) => setPublishDate(e.target.value)}
               />
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={useTemplateFallback}
+                  onChange={(e) => setUseTemplateFallback(e.target.checked)}
+                />
+                <span>禁用 AI，使用模板生成</span>
+              </label>
+              <p className="form-hint">开启后跳过星火 AI，直接用内置英文模板生成正文/摘要（用于快速测试和避免 AI 输出异常）。</p>
             </div>
 
             <div className="form-group">
