@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { findFirstCJKField, ENGLISH_ONLY_ERROR } from '@/lib/articleEnglishGuard'
 
 // GET /api/articles/[id]/versions/[versionId] - 获取特定版本
 export async function GET(
@@ -52,6 +53,16 @@ export async function POST(
         { error: 'Version not found' },
         { status: 404 }
       )
+    }
+
+    if (
+      findFirstCJKField({
+        title: version.title,
+        content: version.content,
+        excerpt: version.excerpt,
+      })
+    ) {
+      return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 400 })
     }
     
     // 在恢复前，先创建当前版本的快照

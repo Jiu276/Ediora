@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { normalizeArticleContent } from '@/lib/normalizeArticleContent'
+import { containsCJK } from '@/lib/language'
 import {
   Modal,
   Steps,
@@ -131,10 +133,21 @@ export default function PublishWizard({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: finalTitleText,
+          prompt:
+            'Write the full article in English only. Do not use Chinese or other CJK characters.',
         }),
       })
       const contentData = await contentRes.json()
-      setGeneratedContent(contentData.content)
+      if (!contentRes.ok || contentData.error) {
+        message.error(contentData.error || '生成失败')
+        return
+      }
+      const normalizedContent = normalizeArticleContent(contentData.content || '')
+      if (containsCJK(normalizedContent) || containsCJK(contentData.excerpt)) {
+        message.error('生成内容包含中文，请重试')
+        return
+      }
+      setGeneratedContent(normalizedContent)
       
       // 生成配图
       const imagesRes = await fetch('/api/auto-images', {
@@ -225,10 +238,16 @@ export default function PublishWizard({
       finalContent = newContent
     }
     
+    const normalizedFinal = normalizeArticleContent(finalContent)
+    if (containsCJK(finalTitleText) || containsCJK(normalizedFinal)) {
+      message.error('文章内容必须为英文（不可包含中文）')
+      return
+    }
+
     const articleData = {
       title: finalTitleText,
-      content: finalContent,
-      excerpt: finalContent.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
+      content: normalizedFinal,
+      excerpt: normalizedFinal.replace(/<[^>]*>/g, '').trim().slice(0, 200),
       categoryId: null,
       titleId: '1', // 默认标题
       customDomains: [], // 字符串数组

@@ -6,15 +6,14 @@ import {
   generateMetaKeywords,
 } from '@/lib/seo'
 import { generateSlug } from '@/lib/slug'
-import { normalizeArticleContent } from '@/lib/normalizeArticleContent'
 import { autoMatchTags, createArticleTags, createArticleTagsFromMatch } from '@/lib/autoTags'
 import { getCurrentUser } from '@/lib/auth'
-
-function containsCJK(input: unknown) {
-  if (input == null) return false
-  const text = Array.isArray(input) ? input.join(' ') : String(input)
-  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text)
-}
+import { containsCJK } from '@/lib/language'
+import {
+  ENGLISH_ONLY_ERROR,
+  prepareEnglishArticleFields,
+  sanitizeImageDescriptions,
+} from '@/lib/articleEnglishGuard'
 
 function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -173,27 +172,24 @@ export async function POST(request: NextRequest) {
       links = [], // [{ keyword, url }]
     } = body
 
-    // Normalize content & excerpt saved by the generator (some models return escaped "\\n" strings
-    // and even JSON-like wrappers such as {"content":"..."}).
-    const normalizedContent = normalizeArticleContent(content || '')
-    const normalizedExcerpt = normalizeArticleContent(excerpt || '')
-
-    // English-only guard for future content.
-    if (
-      containsCJK(title) ||
-      containsCJK(normalizedContent) ||
-      containsCJK(normalizedExcerpt) ||
-      containsCJK(metaTitle) ||
-      containsCJK(metaDescription) ||
-      containsCJK(metaKeywords) ||
-      (Array.isArray(images) && images.some((img: any) => containsCJK(img?.description))) ||
-      (Array.isArray(links) && links.some((l: any) => containsCJK(l?.keyword) || containsCJK(l?.url)))
-    ) {
-      return NextResponse.json(
-        { error: '内容必须为英文（不可包含中文字符）' },
-        { status: 400 }
-      )
+    const englishCheck = prepareEnglishArticleFields({
+      title,
+      content: content || '',
+      excerpt: excerpt || '',
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      images,
+      links,
+    })
+    if (!englishCheck.ok) {
+      return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 400 })
     }
+    const normalizedContent = englishCheck.content ?? ''
+    const normalizedExcerpt = englishCheck.excerpt ?? ''
+    const safeImages = Array.isArray(images)
+      ? sanitizeImageDescriptions(images, String(title || ''))
+      : []
     
     // 生成基础 slug（英文站点：禁止中文标题）
     const baseSlug = generateSlug(title)
@@ -281,7 +277,7 @@ export async function POST(request: NextRequest) {
         titleId: titleId || '1', // 默认标题
         author,
         publishDate: finalPublishDate,
-        featuredImage: featuredImage || (images?.[0]?.url ?? null),
+        featuredImage: featuredImage || (safeImages[0]?.url ?? null),
         enableKeywordLinks,
         // 自动生成SEO元数据
         metaTitle: autoMetaTitle,
@@ -291,8 +287,8 @@ export async function POST(request: NextRequest) {
     })
 
     // 写入文章配图
-    if (Array.isArray(images) && images.length > 0) {
-      const imageData = images.slice(0, 5).map((img: any, idx: number) => ({
+    if (safeImages.length > 0) {
+      const imageData = safeImages.slice(0, 5).map((img: any, idx: number) => ({
         articleId: article.id,
         url: img.url,
         thumbnail: img.thumbnail ?? null,

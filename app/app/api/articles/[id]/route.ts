@@ -6,12 +6,11 @@ import {
   generateMetaKeywords,
 } from '@/lib/seo'
 import { generateSlug } from '@/lib/slug'
-
-function containsCJK(input: unknown) {
-  if (input == null) return false
-  const text = String(input)
-  return /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/.test(text)
-}
+import { containsCJK } from '@/lib/language'
+import {
+  ENGLISH_ONLY_ERROR,
+  prepareEnglishArticleFields,
+} from '@/lib/articleEnglishGuard'
 
 // GET /api/articles/[id] - 获取单个文章
 export async function GET(
@@ -67,19 +66,16 @@ export async function PUT(
       createVersion: _createVersion = false, // 版本快照功能暂不使用
     } = body
 
-    // English-only guard for future edits.
-    if (
-      containsCJK(title) ||
-      containsCJK(content) ||
-      containsCJK(excerpt) ||
-      containsCJK(metaTitle) ||
-      containsCJK(metaDescription) ||
-      containsCJK(metaKeywords)
-    ) {
-      return NextResponse.json(
-        { error: '内容必须为英文（不可包含中文字符）' },
-        { status: 400 }
-      )
+    const englishCheck = prepareEnglishArticleFields({
+      title,
+      content,
+      excerpt,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+    })
+    if (!englishCheck.ok) {
+      return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 400 })
     }
 
     // 读取当前文章，供后续自动补全字段使用
@@ -159,8 +155,14 @@ export async function PUT(
     
     // 自动生成SEO元数据（只有在明确提供了自定义值时才使用，否则自动生成）
     const finalTitle = title || currentArticle?.title || ''
-    const finalContent = content !== undefined ? content : currentArticle?.content || ''
-    const finalExcerpt = excerpt !== undefined ? excerpt : currentArticle?.excerpt || null
+    const finalContent =
+      content !== undefined
+        ? (englishCheck.content ?? '')
+        : currentArticle?.content || ''
+    const finalExcerpt =
+      excerpt !== undefined
+        ? (englishCheck.excerpt ?? null)
+        : currentArticle?.excerpt || null
     
     const autoMetaTitle = metaTitle !== undefined && metaTitle !== null && metaTitle.trim() 
       ? metaTitle.trim() 
@@ -177,8 +179,8 @@ export async function PUT(
       data: {
         ...(title && { title }),
         ...slugUpdate,
-        ...(content !== undefined && { content }),
-        ...(excerpt !== undefined && { excerpt }),
+        ...(content !== undefined && { content: finalContent }),
+        ...(excerpt !== undefined && { excerpt: finalExcerpt }),
         ...(status && { status: status as 'draft' | 'published' }),
         ...(categoryId !== undefined && { categoryId }),
         ...(titleId && { titleId }),

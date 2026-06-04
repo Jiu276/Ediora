@@ -3,18 +3,10 @@ import { prisma } from '@/lib/prisma'
 import { generateArticle } from '@/lib/spark'
 import { normalizeArticleContent } from '@/lib/normalizeArticleContent'
 import { containsCJK } from '@/lib/language'
-
-function hasNonEnglishArticleFields(fields: {
-  content?: string
-  excerpt?: string
-  tags?: unknown
-}) {
-  return (
-    containsCJK(fields.content) ||
-    containsCJK(fields.excerpt) ||
-    containsCJK(fields.tags)
-  )
-}
+import {
+  ENGLISH_ONLY_ERROR,
+  prepareEnglishArticleFields,
+} from '@/lib/articleEnglishGuard'
 
 // POST /api/generate-article - 生成文章内容（星火API，失败时回退模板）
 export async function POST(request: NextRequest) {
@@ -68,10 +60,7 @@ export async function POST(request: NextRequest) {
         generateContentByCategory(categoryName, title),
       )
       if (containsCJK(articleContent)) {
-        return NextResponse.json(
-          { error: '生成内容包含中文字符，请重试（仅英文）' },
-          { status: 500 },
-        )
+        return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 500 })
       }
 
       const excerpt = articleContent
@@ -90,13 +79,17 @@ export async function POST(request: NextRequest) {
         category: categoryName,
         domains,
       })
-      const normalized = {
-        ...result,
-        content: normalizeArticleContent(result?.content),
-        excerpt: normalizeArticleContent(result?.excerpt),
-      }
-      if (!hasNonEnglishArticleFields(normalized)) {
-        return NextResponse.json(normalized)
+      const prepared = prepareEnglishArticleFields({
+        content: result?.content,
+        excerpt: result?.excerpt,
+        tags: result?.tags,
+      })
+      if (prepared.ok) {
+        return NextResponse.json({
+          ...result,
+          content: prepared.content ?? '',
+          excerpt: prepared.excerpt ?? '',
+        })
       }
       console.warn('Spark generateArticle returned non-English content, fallback to template')
     } catch (err) {
@@ -107,7 +100,7 @@ export async function POST(request: NextRequest) {
       generateContentByCategory(categoryName, title),
     )
     if (containsCJK(articleContent)) {
-      return NextResponse.json({ error: '生成内容包含中文字符，请重试（仅英文）' }, { status: 500 })
+      return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 500 })
     }
 
     const excerpt = articleContent

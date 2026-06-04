@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { sanitizeImageDescriptions } from '@/lib/articleEnglishGuard'
 
 const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY
 
@@ -60,7 +61,8 @@ export async function POST(request: NextRequest) {
       })
     }
     
-    return NextResponse.json({ images })
+    const safeImages = sanitizeImageDescriptions(images || [], title.trim())
+    return NextResponse.json({ images: safeImages })
   } catch (error) {
     console.error('Error generating images:', error)
     return NextResponse.json(

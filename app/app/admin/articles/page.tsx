@@ -32,6 +32,8 @@ import { useRouter } from 'next/navigation'
 import type { ColumnsType } from 'antd/es/table'
 import type { Dayjs } from 'dayjs'
 import PublishWizard from '@/components/PublishWizard'
+import { normalizeArticleContent } from '@/lib/normalizeArticleContent'
+import { containsCJK } from '@/lib/language'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -407,22 +409,13 @@ export default function ArticlesPage() {
             continue
           }
 
-          // 规范化生成内容，避免被包裹成字符串或带转义
-          let finalContentRaw: string = contentData.content || ''
-          if (typeof finalContentRaw === 'string') {
-            // 尝试解析被 JSON.stringify 包裹的内容
-            try {
-              const parsed = JSON.parse(finalContentRaw)
-              if (parsed?.content) {
-                finalContentRaw = parsed.content
-              }
-            } catch {
-              // ignore
-            }
-            // 去掉首尾引号
-            finalContentRaw = finalContentRaw.replace(/^["']|["']$/g, '')
-            // 将转义换行还原
-            finalContentRaw = finalContentRaw.replace(/\\n/g, '\n')
+          const finalContentRaw = normalizeArticleContent(contentData.content || '')
+          const excerptRaw = normalizeArticleContent(contentData.excerpt || '')
+
+          if (containsCJK(finalContentRaw) || containsCJK(excerptRaw) || containsCJK(titleObj.name)) {
+            failCount++
+            console.warn(`生成内容含中文，已跳过: ${titleObj.name}`)
+            continue
           }
 
           const plainTextLen = finalContentRaw.replace(/<[^>]*>/g, '').trim().length
@@ -507,7 +500,9 @@ export default function ArticlesPage() {
             body: JSON.stringify({
               title: titleObj.name,
               content: finalContent,
-              excerpt: finalContent.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
+              excerpt:
+                excerptRaw ||
+                finalContent.replace(/<[^>]*>/g, '').trim().slice(0, 200),
               categoryId: null,
               titleId: titleObj.id || null,
               status: 'published',

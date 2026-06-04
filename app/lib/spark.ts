@@ -177,7 +177,11 @@ export async function generateTitles(
     try {
       const res = await callChatCompletion(model, {
         messages: [
-          { role: 'system', content: '你是一个专业的标题生成助手。你必须只返回有效的JSON对象，不要任何其他文字、Markdown、代码块或解释。' },
+          {
+            role: 'system',
+            content:
+              'You are a professional title generator. Return valid JSON only. title_en must be English only (no CJK). title_zh is optional Chinese translation for admin preview only.',
+          },
           { role: 'user', content: buildTitlePrompt(prompt) },
         ],
         temperature: 0.8,
