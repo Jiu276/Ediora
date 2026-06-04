@@ -22,31 +22,46 @@ function plainLen(html) {
     .length
 }
 
-async function regenerateOne(article) {
+async function fetchGeneratedContent(article, { forceFallback }) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), 180000)
-
-  const genRes = await fetch(`${baseUrl}/api/generate-article`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      title: article.title,
-      categoryId: article.categoryId,
-      domains: [],
-      prompt: LENGTH_PROMPT,
-      forceFallback: false,
-    }),
-    signal: controller.signal,
-  })
-  clearTimeout(timer)
-
-  if (!genRes.ok) {
-    throw new Error(`generate failed ${genRes.status}: ${await genRes.text()}`)
+  try {
+    const genRes = await fetch(`${baseUrl}/api/generate-article`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: article.title,
+        categoryId: article.categoryId,
+        domains: [],
+        prompt: LENGTH_PROMPT,
+        forceFallback,
+      }),
+      signal: controller.signal,
+    })
+    const text = await genRes.text()
+    if (!genRes.ok) {
+      throw new Error(`generate failed ${genRes.status}: ${text}`)
+    }
+    const data = JSON.parse(text)
+    if (data.error) {
+      throw new Error(String(data.error))
+    }
+    return data
+  } finally {
+    clearTimeout(timer)
   }
+}
 
-  const data = await genRes.json()
-  if (!data?.content || plainLen(data.content) < MIN_PLAIN) {
-    throw new Error(`content too short (${plainLen(data.content)} chars)`)
+async function regenerateOne(article) {
+  let data = await fetchGeneratedContent(article, { forceFallback: false })
+  let len = plainLen(data.content)
+  if (len < MIN_PLAIN) {
+    console.warn(`[retry] AI too short (${len} chars), using long English fallback template`)
+    data = await fetchGeneratedContent(article, { forceFallback: true })
+    len = plainLen(data.content)
+  }
+  if (!data?.content || len < MIN_PLAIN) {
+    throw new Error(`content too short (${len} chars)`)
   }
 
   const putRes = await fetch(`${baseUrl}/api/articles/${article.id}`, {

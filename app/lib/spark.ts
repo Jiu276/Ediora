@@ -303,6 +303,7 @@ export async function generateArticle(params: {
         const plainLen = getPlainTextLength(articleContent)
         if (plainLen < MIN_ARTICLE_PLAIN_CHARS) {
           console.warn(`[${model}] 正文过短(${plainLen}字，需>=${MIN_ARTICLE_PLAIN_CHARS})，尝试下一个模型`)
+          lastError = new Error(`Model returned short content (${plainLen} chars)`)
           continue
         }
         const result = {
@@ -339,10 +340,6 @@ export async function generateArticle(params: {
   }
 
   if (lastError) throw lastError
-  return {
-    content: `<h2>${title}</h2><p>Content generation failed. Please try again.</p>`,
-    excerpt: '',
-    tags: [],
-  }
+  throw new Error('All Spark models failed to generate article content')
 }
 

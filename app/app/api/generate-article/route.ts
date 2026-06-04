@@ -7,7 +7,7 @@ import {
   ENGLISH_ONLY_ERROR,
   prepareEnglishArticleFields,
 } from '@/lib/articleEnglishGuard'
-import { ARTICLE_LENGTH_PROMPT } from '@/lib/articleLength'
+import { ARTICLE_LENGTH_PROMPT, isMediumOrLongArticle } from '@/lib/articleLength'
 import { buildMediumEnglishFallbackArticle } from '@/lib/generateEnglishFallback'
 
 // POST /api/generate-article - 生成文章内容（星火API，失败时回退模板）
@@ -72,14 +72,19 @@ export async function POST(request: NextRequest) {
         excerpt: result?.excerpt,
         tags: result?.tags,
       })
-      if (prepared.ok) {
+      if (
+        prepared.ok &&
+        isMediumOrLongArticle(prepared.content ?? '')
+      ) {
         return NextResponse.json({
           ...result,
           content: prepared.content ?? '',
           excerpt: prepared.excerpt ?? '',
         })
       }
-      console.warn('Spark generateArticle returned non-English content, fallback to template')
+      console.warn(
+        'Spark generateArticle invalid (non-English or too short), fallback to template',
+      )
     } catch (err) {
       console.warn('Spark generateArticle failed, fallback to template:', err)
     }
