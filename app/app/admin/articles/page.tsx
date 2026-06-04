@@ -420,49 +420,79 @@ export default function ArticlesPage() {
             finalContentRaw = finalContentRaw.replace(/\\n/g, '\n')
           }
 
-          // 生成配图
+          const plainTextLen = finalContentRaw.replace(/<[^>]*>/g, '').trim().length
+          if (plainTextLen < 150) {
+            failCount++
+            console.warn(`生成正文过短，已跳过: ${titleObj.name}`, plainTextLen)
+            continue
+          }
+
+          // 生成配图（带上正文上下文，提高与主题相关性）
           const imagesRes = await fetch('/api/auto-images', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: titleObj.name }),
+            body: JSON.stringify({
+              title: titleObj.name,
+              count: 8,
+              context: `${titleObj.name}\n\n${finalContentRaw}`.trim(),
+            }),
           })
           const imagesData = await imagesRes.json()
 
           // 选择前3张图片（直接取对象，避免 id 对比导致为空）
           const selectedImagesData = (imagesData.images || []).slice(0, 3)
 
-          // 将图片插入到文章内容中
-          let finalContent = contentData.content
-          if (selectedImagesData.length > 0) {
-            const parts = finalContent.split(/<h3>/)
-            let newContent = parts[0]
-            const imagesPerPart = Math.ceil(selectedImagesData.length / Math.max(parts.length - 1, 1))
-            let imageIndex = 0
-
-            for (let i = 1; i < parts.length; i++) {
-              const part = parts[i]
-              const [title, ...contentParts] = part.split('</h3>')
-              const content = contentParts.join('</h3>')
-              newContent += `<h3>${title}</h3>`
-              const firstParagraph = content.match(/<p>[\s\S]*?<\/p>/)?.[0] || ''
-              newContent += firstParagraph
-
-              const partImages = selectedImagesData.slice(imageIndex, imageIndex + imagesPerPart)
-              if (partImages.length > 0) {
-                const imageHtml = partImages.map((img: { url: string; description?: string }) => {
-                  return `<figure style="margin: 30px 0; text-align: center;">
+          const buildFigureHtml = (images: Array<{ url: string; description?: string }>) =>
+            images
+              .map((img) => {
+                return `<figure style="margin: 30px 0; text-align: center;">
                     <img src="${img.url}" alt="${img.description || titleObj.name}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
                     ${img.description ? `<figcaption style="margin-top: 12px; color: #666; font-size: 14px; font-style: italic;">${img.description}</figcaption>` : ''}
                   </figure>`
-                }).join('\n')
-                newContent += imageHtml
-              }
+              })
+              .join('\n')
 
-              const remainingContent = content.replace(firstParagraph, '')
-              newContent += remainingContent
-              imageIndex += imagesPerPart
+          // 将图片插入到文章内容中（必须用规范化后的 finalContentRaw）
+          let finalContent = finalContentRaw
+          if (selectedImagesData.length > 0) {
+            if (!/<h3\b/i.test(finalContent)) {
+              // 无 h3 时插在首段后，避免正文被拆空
+              const firstParagraph = finalContent.match(/<p>[\s\S]*?<\/p>/)?.[0] || ''
+              if (firstParagraph) {
+                finalContent = finalContent.replace(
+                  firstParagraph,
+                  `${firstParagraph}\n${buildFigureHtml(selectedImagesData)}`
+                )
+              } else {
+                finalContent += buildFigureHtml(selectedImagesData)
+              }
+            } else {
+              const parts = finalContent.split(/<h3>/)
+              let newContent = parts[0]
+              const imagesPerPart = Math.ceil(
+                selectedImagesData.length / Math.max(parts.length - 1, 1)
+              )
+              let imageIndex = 0
+
+              for (let i = 1; i < parts.length; i++) {
+                const part = parts[i]
+                const [title, ...contentParts] = part.split('</h3>')
+                const content = contentParts.join('</h3>')
+                newContent += `<h3>${title}</h3>`
+                const firstParagraph = content.match(/<p>[\s\S]*?<\/p>/)?.[0] || ''
+                newContent += firstParagraph
+
+                const partImages = selectedImagesData.slice(imageIndex, imageIndex + imagesPerPart)
+                if (partImages.length > 0) {
+                  newContent += buildFigureHtml(partImages)
+                }
+
+                const remainingContent = content.replace(firstParagraph, '')
+                newContent += remainingContent
+                imageIndex += imagesPerPart
+              }
+              finalContent = newContent
             }
-            finalContent = newContent
           }
 
           // 创建文章

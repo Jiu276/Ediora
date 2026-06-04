@@ -8,7 +8,7 @@ function getModelCandidates() {
   const primary =
     process.env.SPARK_PRIMARY_MODEL ||
     process.env.SPARK_API_MODEL || // 兼容旧配置
-    'gemini-3-pro-preview'
+    'gemini-3.1-pro-preview'
 
   const fallbacks =
     (process.env.SPARK_FALLBACK_MODELS || '')
@@ -274,8 +274,23 @@ export async function generateArticle(params: {
       try {
         const jsonMatch = content.match(/\{[\s\S]*\}/)
         const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(content)
+        let articleContent = String(parsed.content || '').trim()
+        // 偶发双层 JSON 字符串
+        if (articleContent.startsWith('{') && articleContent.includes('"content"')) {
+          try {
+            const inner = JSON.parse(articleContent)
+            if (inner?.content) articleContent = String(inner.content).trim()
+          } catch {
+            // ignore
+          }
+        }
+        const plainLen = articleContent.replace(/<[^>]*>/g, '').trim().length
+        if (plainLen < 150) {
+          console.warn(`[${model}] 正文过短(${plainLen}字)，尝试下一个模型`)
+          continue
+        }
         return {
-          content: parsed.content || '',
+          content: articleContent,
           excerpt: parsed.excerpt || '',
           tags: Array.isArray(parsed.tags) ? parsed.tags : [],
         }

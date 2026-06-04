@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { generateSlug } from '@/lib/slug'
 
@@ -50,6 +51,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       where: { id: params.id },
       data: updates,
     })
+
+    if (updates.isActive === true) {
+      revalidatePath('/', 'layout')
+      revalidatePath('/blog')
+    }
 
     return NextResponse.json(theme)
   } catch (error: any) {

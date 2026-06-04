@@ -1,23 +1,27 @@
 import { getActiveTheme } from '@/lib/themeLoader'
 import { prisma } from '@/lib/prisma'
-import dynamic from 'next/dynamic'
+// 不能与 export const dynamic 同名，故用 nextDynamic 作为 next/dynamic 的导入名
+import nextDynamic from 'next/dynamic'
+
+// 主题来自数据库，必须每次请求重新取，否则切换主题后首页仍显示构建时缓存的默认主题
+export const dynamic = 'force-dynamic'
 
 // 动态加载主题组件映射
 const themeComponents: Record<string, any> = {
-  default: dynamic(() => import('@/themes/default/HomeTemplate'), { ssr: true }),
-  minimal: dynamic(() => import('@/themes/minimal/HomeTemplate'), { ssr: true }),
-  magazine: dynamic(() => import('@/themes/magazine/HomeTemplate'), { ssr: true }),
-  dark: dynamic(() => import('@/themes/dark/HomeTemplate'), { ssr: true }),
-  card: dynamic(() => import('@/themes/card/HomeTemplate'), { ssr: true }),
-  'bootstrap-blog': dynamic(() => import('@/themes/bootstrap-blog/HomeTemplate'), { ssr: true }),
-  comprehensive: dynamic(() => import('@/themes/comprehensive/HomeTemplate'), { ssr: true }),
-  'magazine-multi': dynamic(() => import('@/themes/magazine-multi/HomeTemplate'), { ssr: true }),
-  'minimal-lifestyle': dynamic(() => import('@/themes/minimal-lifestyle/HomeTemplate'), { ssr: true }),
-  'travel-blog': dynamic(() => import('@/themes/travel-blog/HomeTemplate'), { ssr: true }),
-  'modern-magazine': dynamic(() => import('@/themes/modern-magazine/HomeTemplate'), { ssr: true }),
-  'modern-simple': dynamic(() => import('@/themes/modern-simple/HomeTemplate'), { ssr: true }),
-  'lifestyle-daily': dynamic(() => import('@/themes/lifestyle-daily/HomeTemplate'), { ssr: true }),
-  'zen-blog': dynamic(() => import('@/themes/zen-blog/HomeTemplate'), { ssr: true }),
+  default: nextDynamic(() => import('@/themes/default/HomeTemplate'), { ssr: true }),
+  minimal: nextDynamic(() => import('@/themes/minimal/HomeTemplate'), { ssr: true }),
+  magazine: nextDynamic(() => import('@/themes/magazine/HomeTemplate'), { ssr: true }),
+  dark: nextDynamic(() => import('@/themes/dark/HomeTemplate'), { ssr: true }),
+  card: nextDynamic(() => import('@/themes/card/HomeTemplate'), { ssr: true }),
+  'bootstrap-blog': nextDynamic(() => import('@/themes/bootstrap-blog/HomeTemplate'), { ssr: true }),
+  comprehensive: nextDynamic(() => import('@/themes/comprehensive/HomeTemplate'), { ssr: true }),
+  'magazine-multi': nextDynamic(() => import('@/themes/magazine-multi/HomeTemplate'), { ssr: true }),
+  'minimal-lifestyle': nextDynamic(() => import('@/themes/minimal-lifestyle/HomeTemplate'), { ssr: true }),
+  'travel-blog': nextDynamic(() => import('@/themes/travel-blog/HomeTemplate'), { ssr: true }),
+  'modern-magazine': nextDynamic(() => import('@/themes/modern-magazine/HomeTemplate'), { ssr: true }),
+  'modern-simple': nextDynamic(() => import('@/themes/modern-simple/HomeTemplate'), { ssr: true }),
+  'lifestyle-daily': nextDynamic(() => import('@/themes/lifestyle-daily/HomeTemplate'), { ssr: true }),
+  'zen-blog': nextDynamic(() => import('@/themes/zen-blog/HomeTemplate'), { ssr: true }),
 }
 
 interface Article {

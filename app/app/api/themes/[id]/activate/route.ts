@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 
 interface RouteParams {
@@ -17,6 +18,9 @@ export async function POST(request: Request, { params }: RouteParams) {
       where: { id: params.id },
       data: { isActive: true },
     })
+
+    revalidatePath('/', 'layout')
+    revalidatePath('/blog')
 
     return NextResponse.json(theme)
   } catch (error) {

@@ -18,18 +18,18 @@ export async function POST(_request: NextRequest) {
       themes: 0,
     }
 
-    // 1. 插入默认标签类别
+    // 1. 插入默认标签类别（展示名英文，slug 与 database/schema.sql 一致）
     const categories = [
-      { id: '1', name: '生活', slug: 'life', description: '生活相关文章' },
-      { id: '2', name: '旅游', slug: 'travel', description: '旅游相关文章' },
-      { id: '3', name: '科技', slug: 'tech', description: '科技相关文章' },
-      { id: '4', name: '美食', slug: 'food', description: '美食相关文章' },
-      { id: '5', name: '健康', slug: 'health', description: '健康相关文章' },
-      { id: '6', name: '教育', slug: 'education', description: '教育相关文章' },
-      { id: '7', name: '娱乐', slug: 'entertainment', description: '娱乐相关文章' },
-      { id: '8', name: '财经', slug: 'finance', description: '财经相关文章' },
-      { id: '9', name: '体育', slug: 'sports', description: '体育相关文章' },
-      { id: '10', name: '时尚', slug: 'fashion', description: '时尚相关文章' },
+      { id: '1', name: 'Lifestyle', slug: 'life', description: 'Lifestyle related articles' },
+      { id: '2', name: 'Travel', slug: 'travel', description: 'Travel related articles' },
+      { id: '3', name: 'Technology', slug: 'tech', description: 'Technology related articles' },
+      { id: '4', name: 'Food', slug: 'food', description: 'Food related articles' },
+      { id: '5', name: 'Health', slug: 'health', description: 'Health related articles' },
+      { id: '6', name: 'Education', slug: 'education', description: 'Education related articles' },
+      { id: '7', name: 'Entertainment', slug: 'entertainment', description: 'Entertainment related articles' },
+      { id: '8', name: 'Finance', slug: 'finance', description: 'Finance related articles' },
+      { id: '9', name: 'Sports', slug: 'sports', description: 'Sports related articles' },
+      { id: '10', name: 'Fashion', slug: 'fashion', description: 'Fashion related articles' },
     ]
 
     for (const cat of categories) {
@@ -82,13 +82,76 @@ export async function POST(_request: NextRequest) {
       }
     }
 
-    // 3. 插入默认主题
+    // 3. 插入默认主题（与 database/init-themes.sql + database/schema.sql 中的扩展主题一致）
     const themes = [
       { id: '1', name: '默认主题', slug: 'default', description: '现代简洁风格，适合通用博客', isActive: true },
       { id: '2', name: '深色主题', slug: 'dark', description: '深色主题，护眼舒适', isActive: false },
       { id: '3', name: '简约主题', slug: 'minimal', description: '极简风格，专注内容本身', isActive: false },
       { id: '4', name: '杂志风格', slug: 'magazine', description: '杂志排版风格，适合内容丰富', isActive: false },
       { id: '5', name: '卡片风格', slug: 'card', description: '大卡片风格，视觉冲击力强', isActive: false },
+      {
+        id: '6',
+        name: 'Bootstrap Blog',
+        slug: 'bootstrap-blog',
+        description: 'Bootstrap 5 风格博客主题，经典现代设计',
+        isActive: false,
+      },
+      {
+        id: '7',
+        name: '综合类博客',
+        slug: 'comprehensive',
+        description: '综合类博客主题，现代简约设计，适合多领域内容',
+        isActive: false,
+      },
+      {
+        id: '8',
+        name: '多功能杂志',
+        slug: 'magazine-multi',
+        description: '杂志风格多功能主题，深色头部，红色强调色，适合内容丰富',
+        isActive: false,
+      },
+      {
+        id: '9',
+        name: '简约休闲生活',
+        slug: 'minimal-lifestyle',
+        description: '简约休闲生活主题，浅色配色，优雅设计，适合生活方式博客',
+        isActive: false,
+      },
+      {
+        id: 'travel-blog',
+        name: 'Travel Blog',
+        slug: 'travel-blog',
+        description: 'Perfect for travel and adventure content',
+        isActive: false,
+      },
+      {
+        id: 'modern-magazine',
+        name: 'Modern Magazine',
+        slug: 'modern-magazine',
+        description: 'Modern magazine style with sidebar',
+        isActive: false,
+      },
+      {
+        id: 'modern-simple',
+        name: 'Modern Simple',
+        slug: 'modern-simple',
+        description: 'Clean and minimal modern design',
+        isActive: false,
+      },
+      {
+        id: 'lifestyle-daily',
+        name: 'Lifestyle Daily',
+        slug: 'lifestyle-daily',
+        description: 'Perfect for lifestyle and daily content',
+        isActive: false,
+      },
+      {
+        id: 'zen-blog',
+        name: 'Zen Blog',
+        slug: 'zen-blog',
+        description: 'Peaceful and mindful blog design',
+        isActive: false,
+      },
     ]
 
     for (const theme of themes) {

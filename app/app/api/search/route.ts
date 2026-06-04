@@ -19,10 +19,11 @@ export async function GET(request: NextRequest) {
     const where = {
       status: 'published' as const,
       deletedAt: null,
+      // MySQL 不支持 mode: 'insensitive'（仅 PostgreSQL）；utf8mb4_unicode_ci 下 LIKE 通常已不区分大小写
       OR: [
-        { title: { contains: keyword, mode: 'insensitive' as const } },
-        { excerpt: { contains: keyword, mode: 'insensitive' as const } },
-        { content: { contains: keyword, mode: 'insensitive' as const } },
+        { title: { contains: keyword } },
+        { excerpt: { contains: keyword } },
+        { content: { contains: keyword } },
       ],
     }
 
