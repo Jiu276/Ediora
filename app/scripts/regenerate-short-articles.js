@@ -7,6 +7,7 @@
  */
 const { PrismaClient } = require('@prisma/client')
 const { rehydrateOne } = require('./lib/rehydrateOne')
+const { buildMediumEnglishFallbackArticle } = require('./lib/buildMediumFallback')
 
 const MIN_PLAIN = Number(process.env.MIN_ARTICLE_PLAIN_CHARS || 5500)
 const baseUrl = process.env.BASE_URL || 'http://127.0.0.1:27601'
@@ -56,12 +57,20 @@ async function regenerateOne(article) {
   let data = await fetchGeneratedContent(article, { forceFallback: false })
   let len = plainLen(data.content)
   if (len < MIN_PLAIN) {
-    console.warn(`[retry] AI too short (${len} chars), using long English fallback template`)
+    console.warn(`[retry] AI too short (${len} chars), calling API fallback`)
     data = await fetchGeneratedContent(article, { forceFallback: true })
     len = plainLen(data.content)
   }
+  if (len < MIN_PLAIN) {
+    console.warn(`[retry] API fallback still short (${len} chars), using local long template`)
+    data = {
+      content: buildMediumEnglishFallbackArticle(article.title),
+      excerpt: '',
+    }
+    len = plainLen(data.content)
+  }
   if (!data?.content || len < MIN_PLAIN) {
-    throw new Error(`content too short (${len} chars)`)
+    throw new Error(`content too short (${len} chars) — run: npm run build && pm2 restart`)
   }
 
   const putRes = await fetch(`${baseUrl}/api/articles/${article.id}`, {

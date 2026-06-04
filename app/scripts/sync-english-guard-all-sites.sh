@@ -50,6 +50,7 @@ FILES=(
   "scripts/regenerate-english-pm2-site.sh"
   "scripts/lib/insertArticleImages.js"
   "scripts/lib/rehydrateOne.js"
+  "scripts/lib/buildMediumFallback.js"
 )
 
 # 校验源文件
