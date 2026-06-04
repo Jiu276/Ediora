@@ -7,6 +7,9 @@
  *   DRY_RUN=1 仅列出待处理文章，不写库
  */
 const { PrismaClient } = require('@prisma/client')
+const { rehydrateOne } = require('./lib/rehydrateOne')
+
+const REHYDRATE_IMAGES = process.env.REHYDRATE_IMAGES !== '0'
 
 const CJK_RE = /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/
 
@@ -53,6 +56,15 @@ async function regenerateOne(baseUrl, article) {
 
   if (!putRes.ok) {
     throw new Error(`PUT failed ${putRes.status}: ${await putRes.text()}`)
+  }
+
+  if (REHYDRATE_IMAGES) {
+    await rehydrateOne(baseUrl, {
+      id: article.id,
+      title: article.title,
+      content: data.content,
+      excerpt: data.excerpt || '',
+    })
   }
 }
 

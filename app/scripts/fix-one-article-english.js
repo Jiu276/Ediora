@@ -67,6 +67,16 @@ async function main() {
       throw new Error(`PUT failed ${putRes.status}: ${await putRes.text()}`)
     }
 
+    const { rehydrateOne } = require('./lib/rehydrateOne')
+    const updated = await prisma.article.findFirst({
+      where: { id: articleId },
+      select: { id: true, title: true, content: true, excerpt: true },
+    })
+    if (updated) {
+      const n = await rehydrateOne(baseUrl, updated)
+      console.log('[images] rehydrated:', n)
+    }
+
     console.log('[ok] done:', article.title)
   } finally {
     await prisma.$disconnect()
