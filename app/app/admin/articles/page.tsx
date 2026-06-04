@@ -36,11 +36,11 @@ import PublishWizard from '@/components/PublishWizard'
 const { RangePicker } = DatePicker
 const { Option } = Select
 
-const DEFAULT_ARTICLE_PROMPT = `请用英文撰写正文。根据选中的标题生成文章，文章篇幅长度中等，图片与文章内容匹配。这篇文章主要是以
+const DEFAULT_ARTICLE_PROMPT = `Write the full article in English only. Use the selected title as the topic. Medium length. Match images to the article theme.
 
-https://www.wildoakboutique.com/ 
+Reference site: https://www.wildoakboutique.com/
 
-这个网站写的，图片使用与文章内容相符合，避免直接用AI稿，要加工得有"人味儿"，有真情实感。避免只堆Banner，要有广告软植入。`
+Write naturally with a human voice (not generic AI filler). Weave in soft promotional mentions where relevant; avoid banner-style ad blocks.`
 
 interface Article {
   id: string
@@ -401,6 +401,11 @@ export default function ArticlesPage() {
             }),
           })
           const contentData = await contentRes.json()
+          if (!contentRes.ok || contentData.error || !contentData.content) {
+            failCount++
+            console.error(`生成文章失败: ${titleObj.name}`, contentData.error || contentRes.statusText)
+            continue
+          }
 
           // 规范化生成内容，避免被包裹成字符串或带转义
           let finalContentRaw: string = contentData.content || ''

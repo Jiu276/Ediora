@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// 防止在 `next build` 阶段尝试静态预渲染导致卡住（构建时会访问数据库）
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // 生成 RSS Feed
 export async function GET() {
   try {
