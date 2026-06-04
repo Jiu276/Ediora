@@ -3,17 +3,17 @@
  * 用法:
  *   BASE_URL=http://127.0.0.1:50813 node scripts/regenerate-short-articles.js
  *   BASE_URL=... node scripts/regenerate-short-articles.js <articleId>
- *   MIN_ARTICLE_PLAIN_CHARS=900  最短纯文本字符数
+ *   MIN_ARTICLE_PLAIN_CHARS=5500  最短纯文本字符数（约 900+ 英文词）
  */
 const { PrismaClient } = require('@prisma/client')
 const { rehydrateOne } = require('./lib/rehydrateOne')
 
-const MIN_PLAIN = Number(process.env.MIN_ARTICLE_PLAIN_CHARS || 900)
+const MIN_PLAIN = Number(process.env.MIN_ARTICLE_PLAIN_CHARS || 5500)
 const baseUrl = process.env.BASE_URL || 'http://127.0.0.1:27601'
 const onlyId = process.argv[2] || ''
 const REHYDRATE_IMAGES = process.env.REHYDRATE_IMAGES !== '0'
 const LENGTH_PROMPT =
-  'Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words). Use 5-6 h3 sections with 2-3 paragraphs each.'
+  'Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words, 5500+ characters). Use 5-6 h3 sections with 2-3 paragraphs each.'
 
 function plainLen(html) {
   return String(html || '')
@@ -81,7 +81,10 @@ async function main() {
       select: { id: true, title: true, categoryId: true, content: true },
     })
 
-    const targets = all.filter((a) => plainLen(a.content) < MIN_PLAIN)
+    const forceAll = process.env.FORCE_ALL === '1'
+    const targets = forceAll
+      ? all
+      : all.filter((a) => plainLen(a.content) < MIN_PLAIN)
     console.log(`Short articles: ${targets.length} (of ${all.length}, min ${MIN_PLAIN} chars)`)
     for (const a of targets) {
       console.log(`- ${plainLen(a.content)} chars | ${a.title}`)

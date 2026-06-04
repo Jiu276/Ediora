@@ -11,10 +11,10 @@ const { rehydrateOne } = require('./lib/rehydrateOne')
 
 const REHYDRATE_IMAGES = process.env.REHYDRATE_IMAGES !== '0'
 const FORCE_FALLBACK = process.env.FORCE_FALLBACK === '1'
-const MIN_PLAIN = Number(process.env.MIN_ARTICLE_PLAIN_CHARS || 900)
+const MIN_PLAIN = Number(process.env.MIN_ARTICLE_PLAIN_CHARS || 5500)
 
 const LENGTH_PROMPT =
-  'Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words). Use 5-6 h3 sections with 2-3 paragraphs each.'
+  'Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words, 5500+ characters). Use 5-6 h3 sections with 2-3 paragraphs each.'
 
 const CJK_RE = /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u30FF\uAC00-\uD7AF]/
 

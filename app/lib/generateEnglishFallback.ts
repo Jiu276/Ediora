@@ -54,10 +54,27 @@ export function buildMediumEnglishFallbackArticle(
       ],
     },
     {
+      h: 'How to compare options side by side',
+      body: [
+        `Build a simple scorecard with five criteria weighted for your situation: performance, price per use, maintenance, sustainability, and support. Rate each finalist from 1–5 and multiply by the weight. The highest total wins only if it passes your non-negotiables.`,
+        `When two products tie, choose the one with clearer documentation and spare parts availability. Long-term ownership costs often hide in discontinued accessories or proprietary refills.`,
+        `For ${articleTitle}, repeat the scorecard every six months. Categories evolve quickly; yesterday’s best pick may be overpriced once newer formulas or models ship.`,
+      ],
+    },
+    {
+      h: 'Questions readers ask most often',
+      body: [
+        `How long before I see results? Most people notice meaningful differences after two to four weeks of consistent use, not after a single application or session.`,
+        `Can I mix brands? Usually yes for accessories, but core formulas and electronics should stay within one ecosystem unless compatibility is documented.`,
+        `What if I have sensitivities? Patch-test new items, introduce one change at a time, and keep a photo log of reactions to share with a professional if needed.`,
+      ],
+    },
+    {
       h: 'Conclusion and next steps',
       body: [
         `${articleTitle} rewards consistency more than intensity. Choose a minimal stack, measure results, and upgrade one element at a time.`,
         `If you are starting today, pick one action from the routine section, schedule a two-week review, and only then add the next item. That is how medium-term gains compound without burnout.`,
+        `Bookmark this guide and revisit before seasonal sales or travel—those are the moments when rushed purchases create the most waste.`,
       ],
     },
   ]

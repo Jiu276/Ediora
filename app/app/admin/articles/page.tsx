@@ -40,7 +40,7 @@ const { Option } = Select
 
 const DEFAULT_ARTICLE_PROMPT = `Write the full article in English only. Use the selected title as the topic.
 
-Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words). Use 5-6 h3 sections; each section needs 2-3 substantial paragraphs. Do not write one-sentence sections.
+Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words, 5500+ characters). Use 5-6 h3 sections; each section needs 2-3 substantial paragraphs. Do not write one-sentence sections.
 
 Match images to the article theme. Reference site: https://www.wildoakboutique.com/
 
@@ -421,9 +421,9 @@ export default function ArticlesPage() {
           }
 
           const plainTextLen = finalContentRaw.replace(/<[^>]*>/g, '').trim().length
-          if (plainTextLen < 900) {
+          if (plainTextLen < 5500) {
             failCount++
-            console.warn(`生成正文过短(<900字)，已跳过: ${titleObj.name}`, plainTextLen)
+            console.warn(`生成正文过短(<5500字符)，已跳过: ${titleObj.name}`, plainTextLen)
             continue
           }
 
