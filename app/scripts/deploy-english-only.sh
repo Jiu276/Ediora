@@ -47,7 +47,18 @@ fi
 log "Prisma generate..."
 npx prisma generate
 
-log "构建 Next.js..."
+log "释放内存（停止 pm2）..."
+if command -v pm2 >/dev/null 2>&1; then
+  pm2 stop all 2>/dev/null || true
+fi
+
+log "当前内存:"
+free -h 2>/dev/null || true
+
+log "构建 Next.js（低配机请耐心等待 5–15 分钟）..."
+export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=1536}"
+export NEXT_TELEMETRY_DISABLED=1
+export LOW_MEM_BUILD="${LOW_MEM_BUILD:-1}"
 npm run build
 
 log "重启应用..."
