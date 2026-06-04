@@ -38,9 +38,11 @@ import { containsCJK } from '@/lib/language'
 const { RangePicker } = DatePicker
 const { Option } = Select
 
-const DEFAULT_ARTICLE_PROMPT = `Write the full article in English only. Use the selected title as the topic. Medium length. Match images to the article theme.
+const DEFAULT_ARTICLE_PROMPT = `Write the full article in English only. Use the selected title as the topic.
 
-Reference site: https://www.wildoakboutique.com/
+Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words). Use 5-6 h3 sections; each section needs 2-3 substantial paragraphs. Do not write one-sentence sections.
+
+Match images to the article theme. Reference site: https://www.wildoakboutique.com/
 
 Write naturally with a human voice (not generic AI filler). Weave in soft promotional mentions where relevant; avoid banner-style ad blocks.`
 
@@ -419,9 +421,9 @@ export default function ArticlesPage() {
           }
 
           const plainTextLen = finalContentRaw.replace(/<[^>]*>/g, '').trim().length
-          if (plainTextLen < 150) {
+          if (plainTextLen < 900) {
             failCount++
-            console.warn(`生成正文过短，已跳过: ${titleObj.name}`, plainTextLen)
+            console.warn(`生成正文过短(<900字)，已跳过: ${titleObj.name}`, plainTextLen)
             continue
           }
 

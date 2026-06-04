@@ -43,7 +43,9 @@ async function main() {
       body: JSON.stringify({
         title: article.title,
         categoryId: article.categoryId,
-        forceFallback: true,
+        forceFallback: process.env.FORCE_FALLBACK === '1',
+        prompt:
+          'Length: medium-to-long, about 1200-2000 words in the body (minimum ~900 words). Use 5-6 h3 sections with 2-3 paragraphs each.',
       }),
       signal: controller.signal,
     })

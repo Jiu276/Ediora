@@ -1,4 +1,9 @@
 import { containsCJK } from '@/lib/language'
+import {
+  ARTICLE_LENGTH_PROMPT,
+  MIN_ARTICLE_PLAIN_CHARS,
+  getPlainTextLength,
+} from '@/lib/articleLength'
 
 const API_KEY = process.env.SPARK_API_KEY
 const API_BASE_URL = process.env.SPARK_API_BASE_URL || 'https://xh.v1api.cc'
@@ -72,9 +77,11 @@ Category: ${category || 'General'}
 Topics/domains: ${domains && domains.length > 0 ? domains.join(', ') : 'Not specified'}
 Additional instructions: ${userPrompt || 'None'}
 
+${ARTICLE_LENGTH_PROMPT}
+
 Requirements:
 1. Structure: one h2 title, 3-5 h3 sections, paragraphs in p tags; optional ul/ol lists.
-2. Length: 1500-3000 words in the body; excerpt 100-200 words.
+2. Length: medium-to-long body, about 1200-2000 words (minimum ~900 words of plain text). Use 5-6 h3 sections with 2-3 paragraphs each; no one-sentence sections.
 3. Language: ENGLISH ONLY. Do not use Chinese, Japanese, or Korean characters anywhere in content, excerpt, or tags.
 4. Tone: natural, human, practical; avoid generic filler and template phrasing.
 5. SEO: weave keywords naturally; no keyword stuffing.
@@ -264,7 +271,7 @@ export async function generateArticle(params: {
           {
             role: 'system',
             content:
-              'You are a professional English content writer. Output English-only HTML article JSON. Never use Chinese characters.',
+              'You are a professional English content writer. Write medium-to-long, substantive articles. Output English-only HTML article JSON. Never use Chinese characters.',
           },
           { role: 'user', content: buildArticlePrompt(title, userPrompt, category, domains) },
         ],
@@ -293,9 +300,9 @@ export async function generateArticle(params: {
             // ignore
           }
         }
-        const plainLen = articleContent.replace(/<[^>]*>/g, '').trim().length
-        if (plainLen < 150) {
-          console.warn(`[${model}] 正文过短(${plainLen}字)，尝试下一个模型`)
+        const plainLen = getPlainTextLength(articleContent)
+        if (plainLen < MIN_ARTICLE_PLAIN_CHARS) {
+          console.warn(`[${model}] 正文过短(${plainLen}字，需>=${MIN_ARTICLE_PLAIN_CHARS})，尝试下一个模型`)
           continue
         }
         const result = {

@@ -30,6 +30,8 @@ fi
 # 相对路径列表：英文防护 + 常用维护脚本
 FILES=(
   "lib/articleEnglishGuard.ts"
+  "lib/articleLength.ts"
+  "lib/generateEnglishFallback.ts"
   "lib/language.ts"
   "lib/normalizeArticleContent.ts"
   "lib/spark.ts"
@@ -42,6 +44,7 @@ FILES=(
   "app/admin/articles/page.tsx"
   "components/PublishWizard.tsx"
   "scripts/regenerate-english-batch.js"
+  "scripts/regenerate-short-articles.js"
   "scripts/fix-one-article-english.js"
   "scripts/rehydrate-article-images.js"
   "scripts/regenerate-english-pm2-site.sh"

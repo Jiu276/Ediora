@@ -7,6 +7,8 @@ import {
   ENGLISH_ONLY_ERROR,
   prepareEnglishArticleFields,
 } from '@/lib/articleEnglishGuard'
+import { ARTICLE_LENGTH_PROMPT } from '@/lib/articleLength'
+import { buildMediumEnglishFallbackArticle } from '@/lib/generateEnglishFallback'
 
 // POST /api/generate-article - 生成文章内容（星火API，失败时回退模板）
 export async function POST(request: NextRequest) {
@@ -36,29 +38,15 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    const generateContentByCategory = (catName: string, articleTitle: string) => {
-      const domainText =
-        Array.isArray(domains) && domains.length > 0 ? domains.join(', ') : ''
-
-      return `
-        <h2>${articleTitle}</h2>
-        <p>${articleTitle} is a topic worth exploring. This article provides a clear, practical overview you can apply immediately.</p>
-        <h3>1. Why it matters</h3>
-        <p>Understanding ${articleTitle} helps you make better decisions and avoid common pitfalls.</p>
-        <h3>2. Step-by-step approach</h3>
-        <p>${domainText ? `In ${domainText}, ` : ''}start with the basics, validate assumptions quickly, and iterate with measurable improvements.</p>
-        <h3>3. Common mistakes to avoid</h3>
-        <p>Keep the process simple, focus on outcomes, and document what you learn so you can improve faster.</p>
-        <h3>4. Summary</h3>
-        <p>${articleTitle} is best mastered through practice. Use this as a starting point and refine your approach over time.</p>
-      `
-    }
+    const buildFallbackContent = (articleTitle: string) =>
+      buildMediumEnglishFallbackArticle(articleTitle, {
+        category: categoryName,
+        domains: Array.isArray(domains) ? domains : [],
+      })
 
     // 优先使用星火 API
     if (forceFallback) {
-      const articleContent = normalizeArticleContent(
-        generateContentByCategory(categoryName, title),
-      )
+      const articleContent = normalizeArticleContent(buildFallbackContent(title))
       if (containsCJK(articleContent)) {
         return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 500 })
       }
@@ -75,7 +63,7 @@ export async function POST(request: NextRequest) {
     try {
       const result = await generateArticle({
         title: title.trim(),
-        userPrompt: `${prompt || ''}\n\nIMPORTANT: Write the article in English only. Do not use any Chinese characters.`,
+        userPrompt: `${prompt || ''}\n\n${ARTICLE_LENGTH_PROMPT}\n\nIMPORTANT: Write the article in English only. Do not use any Chinese characters.`,
         category: categoryName,
         domains,
       })
@@ -96,9 +84,7 @@ export async function POST(request: NextRequest) {
       console.warn('Spark generateArticle failed, fallback to template:', err)
     }
 
-    const articleContent = normalizeArticleContent(
-      generateContentByCategory(categoryName, title),
-    )
+    const articleContent = normalizeArticleContent(buildFallbackContent(title))
     if (containsCJK(articleContent)) {
       return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 500 })
     }

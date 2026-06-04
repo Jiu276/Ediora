@@ -134,7 +134,7 @@ export default function PublishWizard({
         body: JSON.stringify({
           title: finalTitleText,
           prompt:
-            'Write the full article in English only. Do not use Chinese or other CJK characters.',
+            'Write the full article in English only. Medium-to-long: about 1200-2000 words, 5-6 sections with 2-3 paragraphs each. Do not use Chinese or other CJK characters.',
         }),
       })
       const contentData = await contentRes.json()
