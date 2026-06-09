@@ -156,7 +156,7 @@ export default function ArticleDetailPage() {
 
     setLoading(true)
     try {
-      const res = await fetch(`/api/articles/slug/${slug}`)
+      const res = await fetch(`/api/articles/slug/${slug}`, { cache: 'no-store' })
       if (res.ok) {
         const data = await res.json()
         setArticle(data)
@@ -204,10 +204,17 @@ export default function ArticleDetailPage() {
 
   const incrementViewCount = async (articleId: string) => {
     try {
-      await fetch(`/api/articles/${articleId}/views`, {
+      const res = await fetch(`/api/articles/${articleId}/views`, {
         method: 'POST',
+        cache: 'no-store',
       })
-      // 更新本地状态
+      if (res.ok) {
+        const data = await res.json()
+        if (typeof data.viewCount === 'number') {
+          setArticle((prev) => (prev ? { ...prev, viewCount: data.viewCount } : null))
+          return
+        }
+      }
       setArticle((prev) => (prev ? { ...prev, viewCount: (prev.viewCount || 0) + 1 } : null))
     } catch (error) {
       console.error('Error incrementing view count:', error)

@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic'
 import PublishWizard from '@/components/PublishWizard'
 import ImageUpload from '@/components/ImageUpload'
 import VersionHistory from '@/components/VersionHistory'
+import { parseViewCountInput } from '@/lib/viewCount'
 
 // 动态导入富文本编辑器以避免 SSR 问题
 const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), {
@@ -177,12 +178,21 @@ export default function ArticleEditPage() {
         }
       }
       
+      const parsedViewCount = parseViewCountInput(values.viewCount)
+      if (values.viewCount != null && values.viewCount !== '' && Number.isNaN(parsedViewCount)) {
+        message.warning('阅读量必须为非负整数')
+        setLoading(false)
+        return
+      }
+
       const payload = {
         ...values,
         publishDate: values.publishDate ? values.publishDate.toISOString() : null,
         createVersion: !isNew, // 编辑时创建版本快照
         // 创建新文章时，使用当前登录用户作为作者
         ...(isNew && currentUser && { author: currentUser.username }),
+        // 显式提交阅读量，避免 Form 未收集到 InputNumber 时漏传
+        ...(parsedViewCount !== undefined && { viewCount: parsedViewCount }),
       }
       
       const url = isNew ? '/api/articles' : `/api/articles/${id}`

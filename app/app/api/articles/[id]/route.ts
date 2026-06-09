@@ -33,7 +33,9 @@ export async function GET(
       )
     }
     
-    return NextResponse.json(article)
+    return NextResponse.json(article, {
+      headers: { 'Cache-Control': 'no-store' },
+    })
   } catch (error) {
     console.error('Error fetching article:', error)
     return NextResponse.json(
@@ -80,8 +82,9 @@ export async function PUT(
       return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 400 })
     }
 
+    const hasViewCount = Object.prototype.hasOwnProperty.call(body, 'viewCount')
     const parsedViewCount = parseViewCountInput(viewCount)
-    if (viewCount !== undefined && Number.isNaN(parsedViewCount)) {
+    if (hasViewCount && Number.isNaN(parsedViewCount)) {
       return NextResponse.json({ error: '阅读量必须为非负整数' }, { status: 400 })
     }
 
@@ -197,7 +200,7 @@ export async function PUT(
         ...(status === 'published' && !publishDate && { publishDate: new Date() }),
         ...(featuredImage !== undefined && { featuredImage }),
         ...(enableKeywordLinks !== undefined && { enableKeywordLinks }),
-        ...(parsedViewCount !== undefined && { viewCount: parsedViewCount }),
+        ...(hasViewCount && parsedViewCount !== undefined && { viewCount: parsedViewCount }),
         // 自动生成SEO元数据
         metaTitle: autoMetaTitle,
         metaDescription: autoMetaDescription,
@@ -205,7 +208,9 @@ export async function PUT(
       },
     })
     
-    return NextResponse.json(article)
+    return NextResponse.json(article, {
+      headers: { 'Cache-Control': 'no-store' },
+    })
   } catch (error) {
     console.error('Error updating article:', {
       error: (error as any)?.message || error,

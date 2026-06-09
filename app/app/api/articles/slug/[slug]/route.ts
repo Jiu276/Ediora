@@ -113,12 +113,15 @@ export async function GET(
       })
     }
     
-    return NextResponse.json({
-      ...article,
-      content: processedContent,
-      category,
-      tags: tags.map(t => t.tag),
-    })
+    return NextResponse.json(
+      {
+        ...article,
+        content: processedContent,
+        category,
+        tags: tags.map(t => t.tag),
+      },
+      { headers: { 'Cache-Control': 'no-store' } },
+    )
   } catch (error) {
     console.error('Error fetching article by slug:', error)
     return NextResponse.json(
