@@ -22,6 +22,10 @@ LOW_MEM_BUILD="${LOW_MEM_BUILD:-1}"
 
 log() { echo "[sync] $*"; }
 
+if [ "$(id -u)" -eq 0 ]; then
+  log "WARN: 当前为 root。PM2 进程通常在 admin 用户下，请改用: su - admin"
+fi
+
 if [ ! -d "$SRC_DIR" ]; then
   log "ERROR: 源目录不存在: $SRC_DIR"
   exit 1
