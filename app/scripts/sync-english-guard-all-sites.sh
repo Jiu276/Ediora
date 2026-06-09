@@ -8,7 +8,8 @@
 # 环境变量:
 #   SRC_DIR=/home/admin/Ediora-app/app     源目录（已含最新防护代码）
 #   DRY_RUN=1                            只打印将要复制的文件，不写入
-#   BUILD=1                              同步后对每个站点 npm run build
+#   BUILD=1                              同步后对每个站点 npm run build（慎用：全站构建很慢）
+#   ONLY_SITE=summasite                  只处理该 PM2 名称的站点（可逗号分隔多个）
 #   PM2_RESTART=1                        构建后 pm2 restart 对应进程名
 #   LOW_MEM_BUILD=1                      构建时启用（默认 1）
 # =============================================================================
@@ -19,6 +20,7 @@ DRY_RUN="${DRY_RUN:-0}"
 DO_BUILD="${BUILD:-0}"
 DO_PM2="${PM2_RESTART:-0}"
 LOW_MEM_BUILD="${LOW_MEM_BUILD:-1}"
+ONLY_SITE="${ONLY_SITE:-}"
 
 log() { echo "[sync] $*"; }
 
@@ -85,7 +87,11 @@ fi
 log "源目录: $SRC_DIR"
 log "目标站点数: ${#SITE_DIRS[@]}"
 
+log "目标站点数: ${#SITE_DIRS[@]}"
+
+idx=0
 for DST_DIR in "${SITE_DIRS[@]}"; do
+  idx=$((idx + 1))
   SRC_REAL=$(cd "$SRC_DIR" && pwd)
   DST_REAL=$(cd "$DST_DIR" && pwd)
   if [ "$SRC_REAL" = "$DST_REAL" ]; then
@@ -94,7 +100,24 @@ for DST_DIR in "${SITE_DIRS[@]}"; do
   fi
 
   SITE_NAME=$(basename "$(dirname "$DST_DIR")" | sed 's/^Ediora-//')
-  log "----> $DST_DIR (pm2: ${SITE_NAME:-?})"
+
+  if [ -n "$ONLY_SITE" ]; then
+    match=0
+    IFS=',' read -ra ONLY_ARR <<< "$ONLY_SITE"
+    for want in "${ONLY_ARR[@]}"; do
+      want="$(echo "$want" | xargs)"
+      if [ "$SITE_NAME" = "$want" ]; then
+        match=1
+        break
+      fi
+    done
+    if [ "$match" -eq 0 ]; then
+      log "skip (ONLY_SITE): $SITE_NAME"
+      continue
+    fi
+  fi
+
+  log "==== [$idx/${#SITE_DIRS[@]}] $DST_DIR (pm2: ${SITE_NAME:-?}) ===="
 
   for f in "${FILES[@]}"; do
     if [ ! -f "$SRC_DIR/$f" ]; then
@@ -114,7 +137,7 @@ for DST_DIR in "${SITE_DIRS[@]}"; do
   fi
 
   if [ "$DO_BUILD" = "1" ]; then
-    log "build: $DST_DIR"
+    log "build start: $SITE_NAME ($(date '+%H:%M:%S')) — 通常需 5~15 分钟，请耐心等待"
     (
       cd "$DST_DIR"
       export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=1536}"
@@ -122,7 +145,7 @@ for DST_DIR in "${SITE_DIRS[@]}"; do
       export NEXT_TELEMETRY_DISABLED=1
       pm2 stop "$SITE_NAME" 2>/dev/null || true
       npm run build
-    ) || log "WARN: build failed for $SITE_NAME"
+    ) && log "build done: $SITE_NAME ($(date '+%H:%M:%S'))" || log "WARN: build failed for $SITE_NAME"
   fi
 
   if [ "$DO_PM2" = "1" ]; then
@@ -140,5 +163,6 @@ if [ "$DRY_RUN" = "1" ]; then
   log "本次为预览 (DRY_RUN=1)。正式同步请: bash scripts/sync-english-guard-all-sites.sh"
 fi
 if [ "$DO_BUILD" = "0" ]; then
-  log "提示: 同步后建议对每个站点执行 BUILD=1 PM2_RESTART=1 bash scripts/sync-english-guard-all-sites.sh"
+  log "提示: 仅复制文件已完成。单站构建示例:"
+  log "  ONLY_SITE=summasite BUILD=1 PM2_RESTART=1 bash scripts/sync-english-guard-all-sites.sh"
 fi
