@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import {
   Form,
   Input,
+  InputNumber,
   Button,
   Select,
   DatePicker,
@@ -45,6 +46,7 @@ interface Article {
   publishDate: string | null
   featuredImage: string | null
   enableKeywordLinks: boolean
+  viewCount?: number
 }
 
 export default function ArticleEditPage() {
@@ -612,6 +614,22 @@ export default function ArticleEditPage() {
 
           <Form.Item name="publishDate" label="发布日期">
             <DatePicker showTime style={{ width: '100%' }} />
+          </Form.Item>
+
+          <Form.Item
+            name="viewCount"
+            label="阅读量（点击量）"
+            tooltip="前台文章页展示的阅读次数，可手动修改"
+            initialValue={0}
+            rules={[
+              {
+                type: 'number',
+                min: 0,
+                message: '阅读量不能为负数',
+              },
+            ]}
+          >
+            <InputNumber min={0} precision={0} style={{ width: '100%' }} placeholder="0" />
           </Form.Item>
 
           <Form.Item name="featuredImage" label="封面图片">

@@ -14,6 +14,7 @@ import {
   prepareEnglishArticleFields,
   sanitizeImageDescriptions,
 } from '@/lib/articleEnglishGuard'
+import { parseViewCountInput } from '@/lib/viewCount'
 
 function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -170,6 +171,7 @@ export async function POST(request: NextRequest) {
       metaKeywords,
       images = [], // [{url, thumbnail, description, source}]
       links = [], // [{ keyword, url }]
+      viewCount,
     } = body
 
     const englishCheck = prepareEnglishArticleFields({
@@ -190,6 +192,11 @@ export async function POST(request: NextRequest) {
     const safeImages = Array.isArray(images)
       ? sanitizeImageDescriptions(images, String(title || ''))
       : []
+
+    const parsedViewCount = parseViewCountInput(viewCount)
+    if (viewCount !== undefined && Number.isNaN(parsedViewCount)) {
+      return NextResponse.json({ error: '阅读量必须为非负整数' }, { status: 400 })
+    }
     
     // 生成基础 slug（英文站点：禁止中文标题）
     const baseSlug = generateSlug(title)
@@ -279,6 +286,7 @@ export async function POST(request: NextRequest) {
         publishDate: finalPublishDate,
         featuredImage: featuredImage || (safeImages[0]?.url ?? null),
         enableKeywordLinks,
+        viewCount: parsedViewCount ?? 0,
         // 自动生成SEO元数据
         metaTitle: autoMetaTitle,
         metaDescription: autoMetaDescription,

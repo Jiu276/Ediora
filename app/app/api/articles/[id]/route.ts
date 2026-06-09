@@ -11,6 +11,7 @@ import {
   ENGLISH_ONLY_ERROR,
   prepareEnglishArticleFields,
 } from '@/lib/articleEnglishGuard'
+import { parseViewCountInput } from '@/lib/viewCount'
 
 // GET /api/articles/[id] - 获取单个文章
 export async function GET(
@@ -64,6 +65,7 @@ export async function PUT(
       metaDescription,
       metaKeywords,
       createVersion: _createVersion = false, // 版本快照功能暂不使用
+      viewCount,
     } = body
 
     const englishCheck = prepareEnglishArticleFields({
@@ -76,6 +78,11 @@ export async function PUT(
     })
     if (!englishCheck.ok) {
       return NextResponse.json({ error: ENGLISH_ONLY_ERROR }, { status: 400 })
+    }
+
+    const parsedViewCount = parseViewCountInput(viewCount)
+    if (viewCount !== undefined && Number.isNaN(parsedViewCount)) {
+      return NextResponse.json({ error: '阅读量必须为非负整数' }, { status: 400 })
     }
 
     // 读取当前文章，供后续自动补全字段使用
@@ -190,6 +197,7 @@ export async function PUT(
         ...(status === 'published' && !publishDate && { publishDate: new Date() }),
         ...(featuredImage !== undefined && { featuredImage }),
         ...(enableKeywordLinks !== undefined && { enableKeywordLinks }),
+        ...(parsedViewCount !== undefined && { viewCount: parsedViewCount }),
         // 自动生成SEO元数据
         metaTitle: autoMetaTitle,
         metaDescription: autoMetaDescription,
