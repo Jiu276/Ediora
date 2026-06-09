@@ -28,3 +28,6 @@ export function isMediumOrLongArticle(html: string): boolean {
 
 /** 追加到生成 Prompt 的长度要求（英文） */
 export const ARTICLE_LENGTH_PROMPT = `Length requirement: medium-to-long article, about ${TARGET_ARTICLE_WORDS} words in the body (minimum ~900 words, roughly 5500+ characters of plain text). Use 5-6 h3 sections; each section needs 2-3 substantial paragraphs (3-5 sentences each). Add bullet lists where helpful. Do not write one-sentence sections.`
+
+/** 后台「快速生成」等文章提示词输入框最大字符数 */
+export const ARTICLE_PROMPT_MAX_LENGTH = 2000

@@ -34,6 +34,7 @@ import type { Dayjs } from 'dayjs'
 import PublishWizard from '@/components/PublishWizard'
 import { normalizeArticleContent } from '@/lib/normalizeArticleContent'
 import { containsCJK } from '@/lib/language'
+import { ARTICLE_PROMPT_MAX_LENGTH } from '@/lib/articleLength'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -969,8 +970,8 @@ export default function ArticlesPage() {
             value={quickArticlePrompt}
             onChange={(e) => setQuickArticlePrompt(e.target.value)}
             allowClear
-            rows={4}
-            maxLength={500}
+            rows={6}
+            maxLength={ARTICLE_PROMPT_MAX_LENGTH}
             showCount
             style={{ resize: 'vertical' }}
           />
