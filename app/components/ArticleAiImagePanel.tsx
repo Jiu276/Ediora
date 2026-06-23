@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button, Card, Checkbox, Col, Image, Row, Space, Spin, message } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
-import { insertImagesIntoContent } from '@/lib/insertArticleImages'
+import { replaceImagesInContent, countContentImageSlots } from '@/lib/insertArticleImages'
 
 /** AI 配图项 */
 interface AiImageOption {
@@ -151,16 +151,21 @@ export default function ArticleAiImagePanel({
     }
   }
 
-  /** 将选中配图插入正文 */
-  const handleInsertToContent = () => {
+  /** 将选中配图替换正文中已有图片（无图片时则插入） */
+  const handleReplaceInContent = () => {
     const selected = getSelectedImages()
     if (selected.length === 0) {
-      message.warning('请先勾选要插入的图片')
+      message.warning('请先勾选要使用的图片')
       return
     }
-    const next = insertImagesIntoContent(content, selected, title.trim())
+    const slots = countContentImageSlots(content)
+    const next = replaceImagesInContent(content, selected, title.trim())
     onContentChange(next)
-    message.success(`已插入 ${selected.length} 张配图到正文`)
+    if (slots > 0) {
+      message.success(`已替换正文中 ${Math.min(selected.length, slots)} 张图片`)
+    } else {
+      message.success(`正文无图片，已插入 ${selected.length} 张配图`)
+    }
   }
 
   return (
@@ -182,7 +187,12 @@ export default function ArticleAiImagePanel({
       <Spin spinning={generating}>
         {images.length === 0 ? (
           <div style={{ color: '#999', fontSize: 13 }}>
-            根据标题与正文自动生成 8 张相关配图，可多选后设为封面或插入正文。
+            将根据标题与各章节正文提取关键词，生成 8 张主题相关配图。选中后可替换正文中已有图片，或设为封面。
+            {countContentImageSlots(content) > 0 && (
+              <div style={{ marginTop: 6, color: '#1677ff' }}>
+                检测到正文中有 {countContentImageSlots(content)} 张图片，可直接替换。
+              </div>
+            )}
           </div>
         ) : (
           <>
@@ -238,8 +248,8 @@ export default function ArticleAiImagePanel({
               <Button type="primary" onClick={handleSetCover} disabled={selectedIds.length === 0}>
                 添加为封面图片
               </Button>
-              <Button onClick={handleInsertToContent} disabled={selectedIds.length === 0}>
-                插入到正文
+              <Button type="primary" onClick={handleReplaceInContent} disabled={selectedIds.length === 0}>
+                替换正文中的图片
               </Button>
               <Button
                 onClick={handleSaveImages}
