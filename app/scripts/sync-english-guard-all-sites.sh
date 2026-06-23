@@ -62,6 +62,8 @@ FILES=(
   "scripts/lib/insertArticleImages.js"
   "scripts/lib/rehydrateOne.js"
   "scripts/lib/buildMediumFallback.js"
+  "scripts/update-cecred-article.js"
+  "scripts/content/cecred-haircare-article.js"
 )
 
 # 校验源文件
