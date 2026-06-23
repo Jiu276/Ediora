@@ -13,7 +13,7 @@ const { buildCecredArticle } = require('./content/cecred-haircare-article')
 const DRY_RUN = process.env.DRY_RUN === '1'
 const ORDER_COUNT = Number.parseInt(process.env.ORDER_COUNT || '38', 10)
 const VIEW_COUNT = Number.isFinite(ORDER_COUNT) && ORDER_COUNT > 0 ? ORDER_COUNT * 100 : 3800
-const PUBLISH_DATE = new Date('2026-05-27T09:30:00.000Z')
+const PUBLISH_DATE = new Date('2026-05-01T09:30:00.000Z')
 const ARTICLE_ID = process.env.ARTICLE_ID || ''
 
 /**
