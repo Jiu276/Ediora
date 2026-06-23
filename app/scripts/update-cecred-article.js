@@ -76,7 +76,7 @@ async function main() {
         enableKeywordLinks: false,
         metaTitle: payload.title,
         metaDescription: payload.excerpt.slice(0, 160),
-        metaKeywords: 'Cécred, haircare, length retention, shine, protein treatment, styling',
+        metaKeywords: 'Cécred, haircare, Foundation Collection, Styling Collection, protein ritual, length retention, shine',
       },
     })
 
