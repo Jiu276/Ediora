@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic'
 import PublishWizard from '@/components/PublishWizard'
 import ImageUpload from '@/components/ImageUpload'
 import VersionHistory from '@/components/VersionHistory'
+import ArticleAiImagePanel from '@/components/ArticleAiImagePanel'
 import { parseViewCountInput } from '@/lib/viewCount'
 
 // 动态导入富文本编辑器以避免 SSR 问题
@@ -59,6 +60,7 @@ export default function ArticleEditPage() {
   const [form] = Form.useForm()
   const watchedFeaturedImage = Form.useWatch('featuredImage', form)
   const watchedContent = Form.useWatch('content', form)
+  const watchedTitle = Form.useWatch('title', form)
   const [loading, setLoading] = useState(false)
   const [article, setArticle] = useState<Article | null>(null)
   const [showPublishWizard, setShowPublishWizard] = useState(false)
@@ -535,6 +537,22 @@ export default function ArticleEditPage() {
             <TextArea rows={3} placeholder="请输入文章摘要" />
           </Form.Item>
 
+          <Form.Item
+            name="viewCount"
+            label="阅读量（点击量）"
+            tooltip="前台文章页展示的阅读次数，可手动修改"
+            initialValue={0}
+            rules={[
+              {
+                type: 'number',
+                min: 0,
+                message: '阅读量不能为负数',
+              },
+            ]}
+          >
+            <InputNumber min={0} precision={0} style={{ width: '100%' }} placeholder="0" />
+          </Form.Item>
+
           <Form.Item>
             <Card 
               type="inner" 
@@ -591,6 +609,15 @@ export default function ArticleEditPage() {
             />
           </Form.Item>
 
+          <ArticleAiImagePanel
+            articleId={isNew ? null : id}
+            title={watchedTitle || ''}
+            content={watchedContent || ''}
+            featuredImage={watchedFeaturedImage}
+            onFeaturedImageChange={(url) => form.setFieldsValue({ featuredImage: url })}
+            onContentChange={(html) => form.setFieldsValue({ content: html })}
+          />
+
           <Form.Item name="categoryId" label="标签类别">
             <Select placeholder="请选择标签类别" allowClear>
               {categories.map((cat) => (
@@ -624,22 +651,6 @@ export default function ArticleEditPage() {
 
           <Form.Item name="publishDate" label="发布日期">
             <DatePicker showTime style={{ width: '100%' }} />
-          </Form.Item>
-
-          <Form.Item
-            name="viewCount"
-            label="阅读量（点击量）"
-            tooltip="前台文章页展示的阅读次数，可手动修改"
-            initialValue={0}
-            rules={[
-              {
-                type: 'number',
-                min: 0,
-                message: '阅读量不能为负数',
-              },
-            ]}
-          >
-            <InputNumber min={0} precision={0} style={{ width: '100%' }} placeholder="0" />
           </Form.Item>
 
           <Form.Item name="featuredImage" label="封面图片">
