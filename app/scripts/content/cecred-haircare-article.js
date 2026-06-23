@@ -17,23 +17,23 @@ const FIGURE = (url, alt, caption) => `<figure style="margin: 30px 0; text-align
 
 const IMAGES = [
   {
-    url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=80&auto=format',
-    alt: 'Woman with healthy shiny hair',
+    url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=80&auto=format&fit=crop',
+    alt: 'Long wavy hair with natural volume and shine',
     caption: 'Length retention starts with treating breakage before it shows up in the shower drain.',
   },
   {
-    url: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=1200&q=80&auto=format',
-    alt: 'Hair care products on a bathroom shelf',
+    url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop',
+    alt: 'Hair salon with professional haircare products on shelves',
     caption: 'A short ritual you will actually repeat beats a ten-step shelf you abandon by March.',
   },
   {
-    url: 'https://images.unsplash.com/photo-1712641966810-611ff1503c6d?w=1200&q=80&auto=format',
-    alt: 'Woman blow-drying hair with a round brush',
+    url: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=1200&q=80&auto=format&fit=crop',
+    alt: 'Hairstylist blow-drying client hair with round brush',
     caption: 'Heat styling is not the enemy—unprotected heat is.',
   },
   {
-    url: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&q=80&auto=format',
-    alt: 'Long healthy hair with natural shine',
+    url: 'https://images.unsplash.com/photo-1673465766620-1f336d434bff?w=1200&q=80&auto=format&fit=crop',
+    alt: 'Stylist flat-ironing hair for a smooth glossy finish',
     caption: 'Shine that reads in daylight, not just under ring light.',
   },
 ]
