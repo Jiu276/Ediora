@@ -17,23 +17,23 @@ const FIGURE = (url, alt, caption) => `<figure style="margin: 30px 0; text-align
 
 const IMAGES = [
   {
-    url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=80',
+    url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=80&auto=format',
     alt: 'Woman with healthy shiny hair',
     caption: 'Length retention starts with treating breakage before it shows up in the shower drain.',
   },
   {
-    url: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=1200&q=80',
+    url: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=1200&q=80&auto=format',
     alt: 'Hair care products on a bathroom shelf',
     caption: 'A short ritual you will actually repeat beats a ten-step shelf you abandon by March.',
   },
   {
-    url: 'https://images.unsplash.com/photo-1560869713-7d5633361c52?w=1200&q=80',
-    alt: 'Stylist working on a client\'s hair',
+    url: 'https://images.unsplash.com/photo-1712641966810-611ff1503c6d?w=1200&q=80&auto=format',
+    alt: 'Woman blow-drying hair with a round brush',
     caption: 'Heat styling is not the enemy—unprotected heat is.',
   },
   {
-    url: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1200&q=80',
-    alt: 'Close-up of glossy hair texture',
+    url: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&q=80&auto=format',
+    alt: 'Long healthy hair with natural shine',
     caption: 'Shine that reads in daylight, not just under ring light.',
   },
 ]
