@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button, Card, Checkbox, Col, Image, Row, Space, Spin, message } from 'antd'
+import { Button, Card, Checkbox, Col, Image, Row, Space, Spin, Alert, message } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
 import { replaceImagesInContent, countContentImageSlots } from '@/lib/insertArticleImages'
 
@@ -33,6 +33,11 @@ interface ArticleAiImagePanelProps {
 
 const AI_IMAGE_COUNT = 8
 
+/** 配图模块暂未开放（true 时禁用生成与操作按钮） */
+const AI_IMAGE_PANEL_DISABLED = true
+
+const DISABLED_NOTICE = '该功能还未实现，暂不使用。'
+
 /**
  * 文章编辑页：AI 生成配图、多选、设为封面
  */
@@ -61,6 +66,10 @@ export default function ArticleAiImagePanel({
 
   /** 调用 API 生成 8 张配图 */
   const handleGenerate = async () => {
+    if (AI_IMAGE_PANEL_DISABLED) {
+      message.info(DISABLED_NOTICE)
+      return
+    }
     const trimmedTitle = title.trim()
     if (!trimmedTitle) {
       message.warning('请先填写文章标题')
@@ -177,13 +186,24 @@ export default function ArticleAiImagePanel({
       icon={<PictureOutlined />}
       onClick={handleGenerate}
       loading={generating}
+      disabled={AI_IMAGE_PANEL_DISABLED}
     >
       生成 {AI_IMAGE_COUNT} 张配图
     </Button>
   )
 
+  const disabledAlert = (
+    <Alert
+      type="warning"
+      showIcon
+      message={DISABLED_NOTICE}
+      style={{ marginBottom: 16 }}
+    />
+  )
+
   const panelBody = (
     <>
+      {disabledAlert}
       {embedded && (
         <div
           style={{
@@ -200,8 +220,10 @@ export default function ArticleAiImagePanel({
       <Spin spinning={generating}>
       {images.length === 0 ? (
         <div style={{ color: '#999', fontSize: 13 }}>
-          将根据标题与各章节正文提取关键词，生成 8 张主题相关配图。选中后可替换正文中已有图片，或设为封面。
-          {countContentImageSlots(content) > 0 && (
+          {AI_IMAGE_PANEL_DISABLED
+            ? '正式版将按文章标题与正文关键词匹配配图；当前请使用下方「封面图片」手动上传。'
+            : '将根据标题与各章节正文提取关键词，生成 8 张主题相关配图。选中后可替换正文中已有图片，或设为封面。'}
+          {!AI_IMAGE_PANEL_DISABLED && countContentImageSlots(content) > 0 && (
             <div style={{ marginTop: 6, color: '#1677ff' }}>
               检测到正文中有 {countContentImageSlots(content)} 张图片，可直接替换。
             </div>
@@ -232,6 +254,7 @@ export default function ArticleAiImagePanel({
                     <Checkbox
                       checked={selectedIds.includes(image.id)}
                       onChange={(e) => toggleImage(image.id, e.target.checked)}
+                      disabled={AI_IMAGE_PANEL_DISABLED}
                     >
                       选择图片
                     </Checkbox>
@@ -258,16 +281,16 @@ export default function ArticleAiImagePanel({
           </div>
 
           <Space wrap style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={handleSetCover} disabled={selectedIds.length === 0}>
+            <Button type="primary" onClick={handleSetCover} disabled={AI_IMAGE_PANEL_DISABLED || selectedIds.length === 0}>
               添加为封面图片
             </Button>
-            <Button type="primary" onClick={handleReplaceInContent} disabled={selectedIds.length === 0}>
+            <Button type="primary" onClick={handleReplaceInContent} disabled={AI_IMAGE_PANEL_DISABLED || selectedIds.length === 0}>
               替换正文中的图片
             </Button>
             <Button
               onClick={handleSaveImages}
               loading={saving}
-              disabled={!articleId || selectedIds.length === 0}
+              disabled={AI_IMAGE_PANEL_DISABLED || !articleId || selectedIds.length === 0}
             >
               保存选中配图
             </Button>
