@@ -27,6 +27,8 @@ interface ArticleAiImagePanelProps {
   onFeaturedImageChange: (url: string) => void
   /** 更新正文（插入配图时） */
   onContentChange: (html: string) => void
+  /** 嵌入外层 Card 时不重复渲染边框 */
+  embedded?: boolean
 }
 
 const AI_IMAGE_COUNT = 8
@@ -40,6 +42,7 @@ export default function ArticleAiImagePanel({
   content,
   onFeaturedImageChange,
   onContentChange,
+  embedded = false,
 }: ArticleAiImagePanelProps) {
   const [images, setImages] = useState<AiImageOption[]>([])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -168,100 +171,125 @@ export default function ArticleAiImagePanel({
     }
   }
 
+  const generateButton = (
+    <Button
+      type="primary"
+      icon={<PictureOutlined />}
+      onClick={handleGenerate}
+      loading={generating}
+    >
+      生成 {AI_IMAGE_COUNT} 张配图
+    </Button>
+  )
+
+  const panelBody = (
+    <>
+      {embedded && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 16,
+          }}
+        >
+          <span style={{ fontWeight: 500 }}>AI 生成配图</span>
+          {generateButton}
+        </div>
+      )}
+      <Spin spinning={generating}>
+      {images.length === 0 ? (
+        <div style={{ color: '#999', fontSize: 13 }}>
+          将根据标题与各章节正文提取关键词，生成 8 张主题相关配图。选中后可替换正文中已有图片，或设为封面。
+          {countContentImageSlots(content) > 0 && (
+            <div style={{ marginTop: 6, color: '#1677ff' }}>
+              检测到正文中有 {countContentImageSlots(content)} 张图片，可直接替换。
+            </div>
+          )}
+        </div>
+      ) : (
+        <>
+          <Row gutter={[16, 16]}>
+            {images.map((image) => (
+              <Col key={image.id} xs={12} sm={8} md={6}>
+                <div
+                  style={{
+                    border: selectedIds.includes(image.id)
+                      ? '2px solid #1677ff'
+                      : '1px solid #f0f0f0',
+                    borderRadius: 8,
+                    overflow: 'hidden',
+                    background: '#fff',
+                  }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.description || title}
+                    style={{ width: '100%', height: 120, objectFit: 'cover' }}
+                    preview
+                  />
+                  <div style={{ padding: '8px 12px' }}>
+                    <Checkbox
+                      checked={selectedIds.includes(image.id)}
+                      onChange={(e) => toggleImage(image.id, e.target.checked)}
+                    >
+                      选择图片
+                    </Checkbox>
+                    {image.description && (
+                      <div
+                        style={{
+                          marginTop: 4,
+                          fontSize: 12,
+                          color: '#999',
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        {image.description}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Col>
+            ))}
+          </Row>
+
+          <div style={{ marginTop: 12, color: '#666', fontSize: 13 }}>
+            已选择 {selectedIds.length} / {images.length} 张
+          </div>
+
+          <Space wrap style={{ marginTop: 16 }}>
+            <Button type="primary" onClick={handleSetCover} disabled={selectedIds.length === 0}>
+              添加为封面图片
+            </Button>
+            <Button type="primary" onClick={handleReplaceInContent} disabled={selectedIds.length === 0}>
+              替换正文中的图片
+            </Button>
+            <Button
+              onClick={handleSaveImages}
+              loading={saving}
+              disabled={!articleId || selectedIds.length === 0}
+            >
+              保存选中配图
+            </Button>
+          </Space>
+        </>
+      )}
+      </Spin>
+    </>
+  )
+
+  if (embedded) {
+    return panelBody
+  }
+
   return (
     <Card
       type="inner"
       title="AI 生成配图"
       style={{ marginBottom: 24 }}
-      extra={
-        <Button
-          type="primary"
-          icon={<PictureOutlined />}
-          onClick={handleGenerate}
-          loading={generating}
-        >
-          生成 {AI_IMAGE_COUNT} 张配图
-        </Button>
-      }
+      extra={generateButton}
     >
-      <Spin spinning={generating}>
-        {images.length === 0 ? (
-          <div style={{ color: '#999', fontSize: 13 }}>
-            将根据标题与各章节正文提取关键词，生成 8 张主题相关配图。选中后可替换正文中已有图片，或设为封面。
-            {countContentImageSlots(content) > 0 && (
-              <div style={{ marginTop: 6, color: '#1677ff' }}>
-                检测到正文中有 {countContentImageSlots(content)} 张图片，可直接替换。
-              </div>
-            )}
-          </div>
-        ) : (
-          <>
-            <Row gutter={[16, 16]}>
-              {images.map((image) => (
-                <Col key={image.id} xs={12} sm={8} md={6}>
-                  <div
-                    style={{
-                      border: selectedIds.includes(image.id)
-                        ? '2px solid #1677ff'
-                        : '1px solid #f0f0f0',
-                      borderRadius: 8,
-                      overflow: 'hidden',
-                      background: '#fff',
-                    }}
-                  >
-                    <Image
-                      src={image.url}
-                      alt={image.description || title}
-                      style={{ width: '100%', height: 120, objectFit: 'cover' }}
-                      preview
-                    />
-                    <div style={{ padding: '8px 12px' }}>
-                      <Checkbox
-                        checked={selectedIds.includes(image.id)}
-                        onChange={(e) => toggleImage(image.id, e.target.checked)}
-                      >
-                        选择图片
-                      </Checkbox>
-                      {image.description && (
-                        <div
-                          style={{
-                            marginTop: 4,
-                            fontSize: 12,
-                            color: '#999',
-                            lineHeight: 1.4,
-                          }}
-                        >
-                          {image.description}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
-
-            <div style={{ marginTop: 12, color: '#666', fontSize: 13 }}>
-              已选择 {selectedIds.length} / {images.length} 张
-            </div>
-
-            <Space wrap style={{ marginTop: 16 }}>
-              <Button type="primary" onClick={handleSetCover} disabled={selectedIds.length === 0}>
-                添加为封面图片
-              </Button>
-              <Button type="primary" onClick={handleReplaceInContent} disabled={selectedIds.length === 0}>
-                替换正文中的图片
-              </Button>
-              <Button
-                onClick={handleSaveImages}
-                loading={saving}
-                disabled={!articleId || selectedIds.length === 0}
-              >
-                保存选中配图
-              </Button>
-            </Space>
-          </>
-        )}
-      </Spin>
+      {panelBody}
     </Card>
   )
 }

@@ -16,6 +16,7 @@ import {
   Tag,
   Modal,
   Typography,
+  Divider,
 } from 'antd'
 import { SaveOutlined, ArrowLeftOutlined, EyeOutlined, DownloadOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
@@ -187,14 +188,14 @@ export default function ArticleEditPage() {
         return
       }
 
-      const payload = {
+      const payload: Record<string, unknown> = {
         ...values,
         publishDate: values.publishDate ? values.publishDate.toISOString() : null,
-        createVersion: !isNew, // 编辑时创建版本快照
-        // 创建新文章时，使用当前登录用户作为作者
+        createVersion: !isNew,
         ...(isNew && currentUser && { author: currentUser.username }),
-        // 显式提交阅读量，避免 Form 未收集到 InputNumber 时漏传
-        ...(parsedViewCount !== undefined && { viewCount: parsedViewCount }),
+      }
+      if (values.viewCount !== undefined && values.viewCount !== null && values.viewCount !== '') {
+        payload.viewCount = parsedViewCount ?? 0
       }
       
       const url = isNew ? '/api/articles' : `/api/articles/${id}`
@@ -537,22 +538,6 @@ export default function ArticleEditPage() {
             <TextArea rows={3} placeholder="请输入文章摘要" />
           </Form.Item>
 
-          <Form.Item
-            name="viewCount"
-            label="阅读量（点击量）"
-            tooltip="前台文章页展示的阅读次数，可手动修改"
-            initialValue={0}
-            rules={[
-              {
-                type: 'number',
-                min: 0,
-                message: '阅读量不能为负数',
-              },
-            ]}
-          >
-            <InputNumber min={0} precision={0} style={{ width: '100%' }} placeholder="0" />
-          </Form.Item>
-
           <Form.Item>
             <Card 
               type="inner" 
@@ -609,14 +594,41 @@ export default function ArticleEditPage() {
             />
           </Form.Item>
 
-          <ArticleAiImagePanel
-            articleId={isNew ? null : id}
-            title={watchedTitle || ''}
-            content={watchedContent || ''}
-            featuredImage={watchedFeaturedImage}
-            onFeaturedImageChange={(url) => form.setFieldsValue({ featuredImage: url })}
-            onContentChange={(html) => form.setFieldsValue({ content: html })}
-          />
+          <Card type="inner" title="阅读量与 AI 配图" style={{ marginBottom: 24 }}>
+            <Form.Item
+              name="viewCount"
+              label="阅读量（点击量）"
+              tooltip="前台文章页展示的阅读次数，可手动修改后点下方「保存」"
+              initialValue={0}
+              rules={[
+                {
+                  type: 'number',
+                  min: 0,
+                  message: '阅读量不能为负数',
+                },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                precision={0}
+                style={{ width: 240 }}
+                placeholder="0"
+                addonAfter="views"
+              />
+            </Form.Item>
+
+            <Divider style={{ margin: '16px 0' }} />
+
+            <ArticleAiImagePanel
+              embedded
+              articleId={isNew ? null : id}
+              title={watchedTitle || ''}
+              content={watchedContent || ''}
+              featuredImage={watchedFeaturedImage}
+              onFeaturedImageChange={(url) => form.setFieldsValue({ featuredImage: url })}
+              onContentChange={(html) => form.setFieldsValue({ content: html })}
+            />
+          </Card>
 
           <Form.Item name="categoryId" label="标签类别">
             <Select placeholder="请选择标签类别" allowClear>
