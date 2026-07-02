@@ -26,7 +26,7 @@ const IMAGES = [
   {
     url: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&q=80&auto=format&fit=crop',
     alt: 'High-top basketball sneaker product photography',
-    caption: 'Basketball and lifestyle sneakers sit side by side on Zappos—filter by brand, size, and width.',
+    caption: 'Brand filters surface Nike, HOKA, Brooks, and New Balance without digging through unrelated categories.',
     source: 'unsplash',
   },
   {
