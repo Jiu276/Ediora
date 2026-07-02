@@ -70,7 +70,9 @@ FILES=(
   "scripts/update-cecred-article.js"
   "scripts/fix-zappos-article-images.js"
   "scripts/update-zappos-article.js"
+  "scripts/create-zappos-longer-runs-article.js"
   "scripts/content/zappos-shopping-article.js"
+  "scripts/content/zappos-longer-runs-article.js"
   "scripts/content/cecred-haircare-article.js"
 )
 
