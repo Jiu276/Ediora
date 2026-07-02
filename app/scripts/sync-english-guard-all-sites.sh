@@ -43,6 +43,7 @@ FILES=(
   "lib/spark.ts"
   "lib/viewCount.ts"
   "lib/keywordLinks.ts"
+  "lib/articleLinkLimits.ts"
   "lib/insertArticleImages.ts"
   "lib/articleImageSearch.ts"
   "next.config.mjs"

@@ -175,13 +175,13 @@ export async function PUT(
         : currentArticle?.excerpt || null
     
     const autoMetaTitle = metaTitle !== undefined && metaTitle !== null && metaTitle.trim() 
-      ? metaTitle.trim() 
+      ? metaTitle.trim().slice(0, 200)
       : generateMetaTitle(finalTitle, null)
     const autoMetaDescription = metaDescription !== undefined && metaDescription !== null && metaDescription.trim()
-      ? metaDescription.trim()
+      ? metaDescription.trim().slice(0, 500)
       : generateMetaDescription(finalExcerpt, finalContent, null)
     const autoMetaKeywords = metaKeywords !== undefined && metaKeywords !== null && metaKeywords.trim()
-      ? metaKeywords.trim()
+      ? metaKeywords.trim().slice(0, 500)
       : generateMetaKeywords(tags, categoryName, finalTitle, null)
     
     const article = await prisma.article.update({

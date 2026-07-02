@@ -16,6 +16,10 @@ import {
 } from '@/lib/articleEnglishGuard'
 import { parseViewCountInput } from '@/lib/viewCount'
 import { injectKeywordLinksIntoHtml } from '@/lib/keywordLinks'
+import {
+  findOverlongArticleLink,
+  normalizeArticleLinkUrl,
+} from '@/lib/articleLinkLimits'
 
 // GET /api/articles - 获取所有文章（支持状态筛选、搜索、排序）
 export async function GET(request: NextRequest) {
@@ -275,11 +279,19 @@ export async function POST(request: NextRequest) {
 
     // 写入文章超链接（可用于后台管理/追踪）
     if (Array.isArray(links) && links.length > 0) {
+      const overlong = findOverlongArticleLink(links)
+      if (overlong) {
+        return NextResponse.json(
+          { error: `链接 URL 过长：关键词「${overlong.keyword}」` },
+          { status: 400 },
+        )
+      }
+
       const linkData = links
         .map((l: any) => ({
           articleId: article.id,
           keyword: String(l.keyword || '').trim(),
-          url: String(l.url || '').trim(),
+          url: normalizeArticleLinkUrl(l.url),
         }))
         .filter((l) => l.keyword && l.url)
 

@@ -223,6 +223,20 @@ export default function ArticleEditPage() {
             message.warning('文章已保存，但标签保存失败')
           }
         }
+
+        if (!isNew && links.length > 0) {
+          const linksRes = await fetch(`/api/articles/${articleId}/links`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ links }),
+          })
+          if (!linksRes.ok) {
+            const linkErr = await linksRes.json().catch(() => ({}))
+            message.warning(linkErr.error || '文章已保存，但超链接保存失败')
+          } else {
+            fetchLinks(articleId)
+          }
+        }
         
         // 保存后重新获取文章（包含自动生成的SEO数据）
         const updatedRes = await fetch(`/api/articles/${articleId}`)
@@ -252,7 +266,7 @@ export default function ArticleEditPage() {
         }
       } else {
         const errorData = await res.json().catch(() => ({}))
-        message.error(errorData.error || '保存失败，请稍后重试')
+        message.error(errorData.error || errorData.details || '保存失败，请稍后重试')
       }
     } catch (error: unknown) {
       console.error('Save error:', error)
@@ -302,7 +316,8 @@ export default function ArticleEditPage() {
         message.success('超链接已保存')
         fetchLinks(article.id)
       } else {
-        message.error('保存超链接失败')
+        const err = await res.json().catch(() => ({}))
+        message.error(err.error || '保存超链接失败')
       }
     } catch (error) {
       console.error('Save links error:', error)

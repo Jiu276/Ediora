@@ -31,9 +31,9 @@ function extractTextFromHtml(html: string, maxLength: number = 200): string {
  */
 export function generateMetaTitle(title: string, customTitle?: string | null): string {
   if (customTitle && customTitle.trim()) {
-    return customTitle.trim()
+    return customTitle.trim().slice(0, 200)
   }
-  return title.trim()
+  return title.trim().slice(0, 200)
 }
 
 /**
@@ -45,7 +45,7 @@ export function generateMetaDescription(
   customDescription?: string | null
 ): string {
   if (customDescription && customDescription.trim()) {
-    return customDescription.trim()
+    return customDescription.trim().slice(0, 500)
   }
   
   if (excerpt && excerpt.trim()) {
@@ -66,7 +66,7 @@ export function generateMetaKeywords(
   customKeywords?: string | null
 ): string {
   if (customKeywords && customKeywords.trim()) {
-    return customKeywords.trim()
+    return customKeywords.trim().slice(0, 500)
   }
   
   const keywords: string[] = []
@@ -93,7 +93,7 @@ export function generateMetaKeywords(
   // 去重并限制数量
   const uniqueKeywords = Array.from(new Set(keywords)).slice(0, 10)
   
-  return uniqueKeywords.join(', ')
+  return uniqueKeywords.join(', ').slice(0, 500)
 }
 
 
