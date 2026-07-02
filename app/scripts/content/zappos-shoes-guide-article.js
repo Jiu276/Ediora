@@ -5,6 +5,7 @@
  */
 
 const ZAPPOS_URL = process.env.ZAPPOS_URL || 'https://www.zappos.com/'
+const { SHOES_GUIDE_IMAGES } = require('./zappos-footwear-images')
 
 /** @param {string} text */
 function link(text) {
@@ -17,38 +18,7 @@ const FIGURE = (url, alt, caption) => `<figure style="margin: 30px 0; text-align
 </figure>`
 
 /** caption / alt 不含 Shoes、Zappos 等关键词，避免超链接破坏 HTML */
-const IMAGES = [
-  {
-    url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Red Nike Free running trainer on a yellow background',
-    caption: 'Daily road trainers—check width and return window before you chase a launch colorway.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Retail display wall filled with athletic sneakers and trainers',
-    caption: 'Brand filters surface Nike, HOKA, Brooks, and New Balance without digging through unrelated categories.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1595341887945-d74c43aaf032?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Hands tying laces on a grey and orange running trainer',
-    caption: 'Lace-up fit tests at home beat guessing half sizes from a size chart alone.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&q=80&auto=format&fit=crop',
-    alt: 'High-top Nike Air Jordan sneaker on a yellow studio backdrop',
-    caption: 'Lifestyle and basketball silhouettes share the same free-shipping return policy as running pairs.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1560769629-975ec792e47a?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Colorful athletic trainers arranged in rows on a store shelf',
-    caption: 'Kids and adult sizes live in separate filters—set age band first to avoid conversion-chart mistakes.',
-    source: 'unsplash',
-  },
-]
+const IMAGES = SHOES_GUIDE_IMAGES
 
 /**
  * @returns {{

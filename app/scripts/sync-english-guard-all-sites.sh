@@ -73,6 +73,7 @@ FILES=(
   "scripts/create-zappos-longer-runs-article.js"
   "scripts/fix-summasite-zappos-shoes-article.js"
   "scripts/content/zappos-shopping-article.js"
+  "scripts/content/zappos-footwear-images.js"
   "scripts/content/zappos-shoes-guide-article.js"
   "scripts/content/zappos-longer-runs-article.js"
   "scripts/content/cecred-haircare-article.js"

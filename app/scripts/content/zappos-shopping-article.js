@@ -4,6 +4,7 @@
  */
 
 const ZAPPOS_URL = process.env.ZAPPOS_URL || 'https://www.zappos.com/'
+const { SHOPPING_GUIDE_IMAGES } = require('./zappos-footwear-images')
 
 /** @param {string} text */
 function link(text) {
@@ -16,32 +17,7 @@ const FIGURE = (url, alt, caption) => `<figure style="margin: 30px 0; text-align
 </figure>`
 
 /** 配图说明刻意避开「Shoes / Zappos」等关键词，防止自动超链接破坏 caption */
-const IMAGES = [
-  {
-    url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Bold red Nike running trainer on a yellow studio backdrop',
-    caption: 'Running trainers are a core category—start with fit and return policy before chasing colorways.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&q=80&auto=format&fit=crop',
-    alt: 'High-top basketball sneaker product photography',
-    caption: 'Brand filters surface Nike, HOKA, Brooks, and New Balance without digging through unrelated categories.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Retail wall displaying rows of athletic footwear',
-    caption: 'A wide brand wall means you can compare Nike, HOKA, New Balance, and Birkenstock in one session.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Multiple running trainers arranged on a store shelf',
-    caption: 'Use size filters and width options early—fewer boxes shipped back means faster wardrobe upgrades.',
-    source: 'unsplash',
-  },
-]
+const IMAGES = SHOPPING_GUIDE_IMAGES
 
 /**
  * @returns {{ title: string; excerpt: string; content: string; featuredImage: string; images: typeof IMAGES; links: Array<{ keyword: string; url: string }> }}

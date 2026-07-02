@@ -4,6 +4,7 @@
  */
 
 const ZAPPOS_URL = process.env.ZAPPOS_URL || 'https://www.zappos.com/'
+const { LONGER_RUNS_IMAGES } = require('./zappos-footwear-images')
 
 /** @param {string} text */
 function link(text) {
@@ -15,32 +16,7 @@ const FIGURE = (url, alt, caption) => `<figure style="margin: 30px 0; text-align
   <figcaption style="margin-top: 12px; color: #666; font-size: 14px; font-style: italic;">${caption}</figcaption>
 </figure>`
 
-const IMAGES = [
-  {
-    url: 'https://images.unsplash.com/photo-1476480862122-209bfaa8edc8?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Runner silhouetted against a golden summer sunset on an open road',
-    caption: 'June light stays up past dinner—that is when the extra miles actually happen.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Bright red Nike Free running trainer on a yellow studio background',
-    caption: 'Daily trainers take a beating; midsole foam does not care about your calendar.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1571008887538-b879bb934af7?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Woman jogging outdoors on a warm sunny day in athletic gear',
-    caption: 'Heat changes pace. Fabric and fit matter more once the humidity climbs.',
-    source: 'unsplash',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1552674602-db6ffd4adf3c?w=1200&q=80&auto=format&fit=crop',
-    alt: 'Group of runners mid-stride during an outdoor road race',
-    caption: 'A rotating pair for long days and a lighter pair for tempo work spreads the load.',
-    source: 'unsplash',
-  },
-]
+const IMAGES = LONGER_RUNS_IMAGES
 
 /**
  * @returns {{
