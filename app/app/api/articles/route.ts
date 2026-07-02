@@ -15,7 +15,6 @@ import {
   sanitizeImageDescriptions,
 } from '@/lib/articleEnglishGuard'
 import { parseViewCountInput } from '@/lib/viewCount'
-import { injectKeywordLinksIntoHtml } from '@/lib/keywordLinks'
 import {
   findOverlongArticleLink,
   normalizeArticleLinkUrl,
@@ -237,17 +236,11 @@ export async function POST(request: NextRequest) {
       ? new Date(publishDate) 
       : (status === 'published' ? new Date() : null)
 
-    // If enabled, inject keyword links into HTML before saving.
-    const finalContentWithLinks =
-      enableKeywordLinks && Array.isArray(links) && links.length > 0
-        ? injectKeywordLinksIntoHtml(normalizedContent || '', links)
-        : (normalizedContent || '')
-
     const article = await prisma.article.create({
       data: {
         title,
         slug,
-        content: finalContentWithLinks,
+        content: normalizedContent || '',
         excerpt: normalizedExcerpt || '',
         status: status as 'draft' | 'published',
         categoryId,

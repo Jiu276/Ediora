@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { injectKeywordLinksIntoHtml } from '@/lib/keywordLinks'
 import {
   findOverlongArticleLink,
   MAX_ARTICLE_LINK_URL_LENGTH,
@@ -83,20 +82,7 @@ export async function POST(
       )
     )
 
-    // 如果文章启用了关键字自动超链接，则更新文章内容中的链接
-    const article = await prisma.article.findFirst({
-      where: { id: params.id, deletedAt: null },
-    })
-
-    if (article && article.enableKeywordLinks) {
-      const newContent = injectKeywordLinksIntoHtml(article.content || '', links)
-      if (newContent !== article.content) {
-        await prisma.article.update({
-          where: { id: params.id },
-          data: { content: newContent },
-        })
-      }
-    }
+    // 关键词链接仅存 articleLink 表，展示时在 slug API 动态注入，避免污染正文 HTML
 
     return NextResponse.json(createdLinks, { status: 201 })
   } catch (error) {
