@@ -1,39 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-
-function escapeRegExp(str: string) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function injectKeywordLinksIntoHtml(
-  html: string,
-  links: Array<{ keyword: string; url: string }>
-) {
-  if (!html || !Array.isArray(links) || links.length === 0) return html
-
-  const safeLinks = links
-    .map((l) => ({
-      keyword: String(l.keyword || '').trim(),
-      url: String(l.url || '').trim(),
-    }))
-    .filter((l) => l.keyword && l.url)
-
-  if (safeLinks.length === 0) return html
-
-  const blockRegex = /<(p|h1|h2|h3|h4|h5|h6|figcaption)([^>]*)>([\s\S]*?)<\/\1>/gi
-
-  return html.replace(blockRegex, (match, tag, attrs, inner) => {
-    let updated = inner
-    for (const link of safeLinks) {
-      const re = new RegExp(`\\b${escapeRegExp(link.keyword)}\\b`, 'g')
-      updated = updated.replace(
-        re,
-        `<a href="${link.url}" target="_blank" rel="nofollow noopener noreferrer">${link.keyword}</a>`
-      )
-    }
-    return `<${tag}${attrs}>${updated}</${tag}>`
-  })
-}
+import { injectKeywordLinksIntoHtml } from '@/lib/keywordLinks'
 
 // GET /api/articles/[id]/links - 获取文章的超链接
 export async function GET(

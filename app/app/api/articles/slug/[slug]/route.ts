@@ -5,6 +5,7 @@ import {
   generateMetaDescription,
   generateMetaKeywords,
 } from '@/lib/seo'
+import { injectKeywordLinksIntoHtml } from '@/lib/keywordLinks'
 
 // GET /api/articles/slug/[slug] - 根据 slug 获取文章（前端用）
 export async function GET(
@@ -101,16 +102,10 @@ export async function GET(
     // 如果启用了关键字自动超链接，处理文章内容
     let processedContent = article.content
     if (article.enableKeywordLinks && links.length > 0) {
-      // 对每个关键字进行替换（避免重复替换已存在的链接）
-      links.forEach(link => {
-        const keyword = link.keyword
-        const url = link.url
-        // 使用正则表达式匹配关键字，但排除已经在<a>标签中的
-        const regex = new RegExp(`(?<!<a[^>]*>)(?<!<[^>]*>)\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b(?![^<]*</a>)`, 'gi')
-        processedContent = processedContent.replace(regex, (match) => {
-          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${match}</a>`
-        })
-      })
+      processedContent = injectKeywordLinksIntoHtml(
+        article.content || '',
+        links.map((link) => ({ keyword: link.keyword, url: link.url })),
+      )
     }
     
     return NextResponse.json(

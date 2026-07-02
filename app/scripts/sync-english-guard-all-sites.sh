@@ -42,12 +42,14 @@ FILES=(
   "lib/normalizeArticleContent.ts"
   "lib/spark.ts"
   "lib/viewCount.ts"
+  "lib/keywordLinks.ts"
   "lib/insertArticleImages.ts"
   "lib/articleImageSearch.ts"
   "next.config.mjs"
   "app/api/generate-article/route.ts"
   "app/api/articles/route.ts"
   "app/api/articles/[id]/route.ts"
+  "app/api/articles/slug/[slug]/route.ts"
   "app/api/articles/[id]/versions/[versionId]/route.ts"
   "app/api/auto-images/route.ts"
   "app/admin/articles/page.tsx"
@@ -63,6 +65,7 @@ FILES=(
   "scripts/lib/rehydrateOne.js"
   "scripts/lib/buildMediumFallback.js"
   "scripts/update-cecred-article.js"
+  "scripts/fix-zappos-article-images.js"
   "scripts/content/cecred-haircare-article.js"
 )
 

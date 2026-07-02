@@ -15,41 +15,7 @@ import {
   sanitizeImageDescriptions,
 } from '@/lib/articleEnglishGuard'
 import { parseViewCountInput } from '@/lib/viewCount'
-
-function escapeRegExp(str: string) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function injectKeywordLinksIntoHtml(
-  html: string,
-  links: Array<{ keyword: string; url: string }>
-) {
-  if (!html || !Array.isArray(links) || links.length === 0) return html
-
-  const safeLinks = links
-    .map((l) => ({
-      keyword: String(l.keyword || '').trim(),
-      url: String(l.url || '').trim(),
-    }))
-    .filter((l) => l.keyword && l.url)
-
-  if (safeLinks.length === 0) return html
-
-  // 只在文本块（p / h1-6 / figcaption）内部替换，避免破坏 <img> 等标签属性
-  const blockRegex = /<(p|h1|h2|h3|h4|h5|h6|figcaption)([^>]*)>([\s\S]*?)<\/\1>/gi
-
-  return html.replace(blockRegex, (match, tag, attrs, inner) => {
-    let updated = inner
-    for (const link of safeLinks) {
-      const re = new RegExp(`\\b${escapeRegExp(link.keyword)}\\b`, 'g')
-      updated = updated.replace(
-        re,
-        `<a href="${link.url}" target="_blank" rel="nofollow noopener noreferrer">${link.keyword}</a>`
-      )
-    }
-    return `<${tag}${attrs}>${updated}</${tag}>`
-  })
-}
+import { injectKeywordLinksIntoHtml } from '@/lib/keywordLinks'
 
 // GET /api/articles - 获取所有文章（支持状态筛选、搜索、排序）
 export async function GET(request: NextRequest) {
